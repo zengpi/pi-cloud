@@ -1,0 +1,85 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.cloud.pi.admin.mapper.UserMapper">
+    <resultMap id="userResult" type="me.cloud.pi.admin.pojo.vo.UserVO">
+        <id property="id" column="id" />
+        <result property="username" column="username" />
+        <result property="nickname" column="nickname" />
+        <result property="sex" column="sex" />
+        <result property="phone" column="phone" />
+        <result property="deptId" column="deptId" />
+        <result property="deptName" column="deptName" />
+        <result property="enabled" column="enabled" />
+        <result property="createTime" column="create_time" />
+        <collection property="roleIds" ofType="Long">
+            <result column="role_id" />
+        </collection>
+    </resultMap>
+
+    <select id="user" resultMap="userResult">
+        SELECT sr.id,
+            sr.username,
+            sr.nickname,
+            sr.sex,
+            sr.phone,
+            sd.id deptId,
+            sd.name deptName,
+            sur.role_id,
+            sr.enabled,
+            sr.create_time
+        FROM sys_user sr
+            LEFT JOIN sys_dept sd on sr.dept_id = sd.id
+            LEFT JOIN sys_user_role sur on sr.id = sur.user_id
+        WHERE sr.deleted = 0
+        <if test="userQuery.keyWord != null and userQuery.keyWord.trim() neq ''">
+            AND (
+                sr.username LIKE CONCAT('%', #{userQuery.keyWord}, '%')
+                OR sr.nickname LIKE CONCAT('%', #{userQuery.keyWord}, '%')
+                OR sr.phone LIKE CONCAT('%', #{userQuery.keyWord} ,'%')
+            )
+        </if>
+        <if test="userQuery.enabled != null">
+            AND sr.enabled = #{userQuery.enabled}
+        </if>
+        <if test="userQuery.deptId != null">
+            AND sd.id = #{userQuery.deptId}
+        </if>
+        ORDER BY sr.create_time DESC
+    </select>
+
+    <select id="listDownloadRecode" resultType="me.cloud.pi.admin.pojo.vo.UserExportVO">
+        SELECT
+            u.username, u.nickname, u.phone, d.name dept_name
+        FROM sys_user u
+            LEFT JOIN sys_dept d ON u.dept_id = d.id
+        WHERE u.deleted = 0
+        <if test="query.keyWord != null and query.keyWord.trim() neq ''">
+          AND (u.username LIKE CONCAT('%', #{query.keyWord}, '%')
+            OR u.nickname LIKE CONCAT('%', #{query.keyWord}, '%')
+            OR u.phone LIKE CONCAT('%', #{query.keyWord}, '%'))
+        </if>
+        <if test="query.enabled != null">
+          AND u.enabled = #{query.enabled}
+        </if>
+        ORDER BY u.create_time DESC
+    </select>
+
+    <select id="userNameExists" resultType="java.lang.Integer">
+        SELECT 1 FROM sys_user WHERE deleted = 0 AND username = #{username} LIMIT 1
+    </select>
+
+    <select id="getOptionalUsers" resultType="me.cloud.pi.admin.pojo.vo.OptionalUserVO">
+        SELECT
+            u.id, u.username, u.nickname, d.name dept_name
+        FROM sys_user u
+                 LEFT JOIN sys_dept d ON u.dept_id = d.id
+        WHERE u.deleted = 0
+        <if test="query.keyWord != null and query.keyWord.trim() neq ''">
+            AND (
+                u.username LIKE CONCAT('%', #{query.keyWord}, '%')
+                OR u.nickname LIKE CONCAT('%', #{query.keyWord}, '%')
+                OR d.name LIKE CONCAT('%', #{query.keyWord}, '%')
+            )
+        </if>
+        ORDER BY u.create_time DESC
+    </select>
+</mapper>

@@ -1,0 +1,9 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.cloud.pi.admin.mapper.DeptMapper">
+    <select id="exists" resultType="java.lang.Integer">
+        SELECT 1
+        FROM sys_dept
+        WHERE id = #{deptId}
+        LIMIT 1
+    </select>
+</mapper>

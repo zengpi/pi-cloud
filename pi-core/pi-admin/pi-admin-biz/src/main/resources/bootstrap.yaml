@@ -1,0 +1,18 @@
+pi:
+  # 数据库名称
+  db-name: pi
+
+server:
+  port: 8017
+
+spring:
+  application:
+    name: pi-admin
+  cloud:
+    nacos:
+      server-addr: pi-nacos:8848
+      config:
+        file-extension: yaml
+        extension-configs:
+          - dataId: pi-mybatis.yaml
+          - dataId: pi-redis.yaml

@@ -1,0 +1,31 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.cloud.pi.admin.mapper.RoleMapper">
+
+    <select id="listRoleByUserId" resultType="me.cloud.pi.admin.pojo.po.SysRole">
+        SELECT sr.id,
+               sr.role_code
+        FROM sys_role sr
+                 INNER JOIN
+             sys_user_role sur on sr.id = sur.role_id
+        WHERE sur.user_id = #{id}
+    </select>
+    <select id="getRoleMembers" resultType="me.cloud.pi.admin.pojo.vo.RoleMemberVO">
+        SELECT
+            ur.id, u.username, u.nickname, d.name dept_name
+        FROM sys_user u
+                 LEFT JOIN sys_dept d ON u.dept_id = d.id
+                 LEFT JOIN sys_user_role ur ON u.id = ur.user_id
+        WHERE u.deleted = 0
+          AND ur.role_id = #{queryParam.roleId}
+        <if test="queryParam.keyWord != null and queryParam.keyWord.trim() neq ''">
+            AND (
+                u.username LIKE CONCAT('%', #{queryParam.keyWord}, '%')
+                OR u.nickname LIKE CONCAT('%', #{queryParam.keyWord}, '%')
+                OR d.name LIKE CONCAT('%', #{queryParam.keyWord}, '%')
+            )
+        </if>
+    </select>
+    <select id="isExistRoleUser" resultType="java.lang.Integer">
+        SELECT 1 FROM sys_user_role WHERE role_id = #{userRole.roleId} AND user_id = #{userRole.userId} LIMIT 1
+    </select>
+</mapper>
