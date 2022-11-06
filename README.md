@@ -2,7 +2,7 @@
 
 ## 简介
 
-pi-cloud 是基于 Spring Cloud 2021 & Spring Cloud Alibaba 2021、Spring Boot 2.6、MyBatis-Plus、Spring Ahorization Server 0.3.1 等最新主流技术栈构建的后台管理系统。
+pi-cloud 是基于 Spring Cloud 2021 & Spring Cloud Alibaba 2021、Spring Boot 2.6、MyBatis-Plus、Spring Auhorization Server 0.3.1 等最新主流技术栈构建的后台管理系统。
 
 ## 特性
 
@@ -26,7 +26,7 @@ pi-cloud 是基于 Spring Cloud 2021 & Spring Cloud Alibaba 2021、Spring Boot 2
 
 ## 参考文档
 
-一定要阅读 pi-cloud 的 [参考文档](https://www.yuque.com/docs/share/b503de99-4dad-4df3-8a2e-facdeca57c9e) ，它描述了开发、运行 pi-cloud 的必要信息以及核心原理。
+一定要阅读 pi-cloud 的 [参考文档](https://www.yuque.com/zengpi/szfuh0) ，它描述了开发、运行 pi-cloud 的必要信息以及核心原理。
 
 阅读 [个人博客](https://www.cnblogs.com/zn-pi/) 也是一个不错的选择，它是对文档很好的一个补充，阅读它会对项目有更深的理解。
 
