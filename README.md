@@ -110,7 +110,7 @@ spring:
 
 ### 导入 Nacos
 
-打开浏览器，访问 http://pi-nacos:8848 （pi-nacos 是 hosts 文件中定义的，如果你没有修改该文件，请将它改成你的主机对应的 IP），输入用户名密码（默认为 nacos/nacos），在“配置管理”的“配置列表”中，点击“导入配置”，选择项目目录下的 `doc/nacos_config_export_xxx.zip`，确认即可。
+打开浏览器，访问 http://pi-nacos:8848 （pi-nacos 是 hosts 文件中定义的，如果你没有修改该文件，请将它改成你的主机对应的 IP），输入用户名密码（默认为 nacos/nacos），在“配置管理”的“配置列表”中，点击“导入配置”，选择项目目录下的 `resources/nacos_config_export_xxx.zip`，确认即可。
 
 或者，你可以克隆 [资源](https://gitee.com/linjiabin100/pi-cloud-resource.git) 仓库，它也包含了 Nacos 的配置，你可以很容易发现它（就在 `pi-cloud-resource` 的根目录下）：
 
@@ -144,7 +144,7 @@ pi:
 
 ### 导入数据库
 
-使用你喜欢的方式连接到 MySQL 数据库中，新建一个数据库，它的名称是 `pi`，并将项目目录下的 `doc/pi-cloud_xxx.sql` 导入到新建的数据库中。
+使用你喜欢的方式连接到 MySQL 数据库中，新建一个数据库，它的名称是 `pi`，并将项目目录下的 `resources/pi-cloud_xxx.sql` 导入到新建的数据库中。
 
 同样，数据库脚本文件可以在 [资源](https://gitee.com/linjiabin100/pi-cloud-resource.git) 仓库中找到。
 
