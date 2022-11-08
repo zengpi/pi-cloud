@@ -1,0 +1,8 @@
+spring:
+  cloud:
+    nacos:
+      server-addr: pi-nacos:8848
+      config:
+        server-addr: pi-nacos:8848
+    inetutils:
+      preferred-networks: 172.18.8.39,172.18.
