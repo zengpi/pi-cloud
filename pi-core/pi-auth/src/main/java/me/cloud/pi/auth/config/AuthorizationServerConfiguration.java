@@ -29,6 +29,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
@@ -44,17 +45,16 @@ import org.springframework.security.oauth2.server.authorization.web.authenticati
 import org.springframework.security.oauth2.server.authorization.web.authentication.OAuth2AuthorizationCodeAuthenticationConverter;
 import org.springframework.security.oauth2.server.authorization.web.authentication.OAuth2ClientCredentialsAuthenticationConverter;
 import org.springframework.security.oauth2.server.authorization.web.authentication.OAuth2RefreshTokenAuthenticationConverter;
+import org.springframework.security.rsa.crypto.KeyStoreKeyFactory;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationConverter;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 
 import java.security.KeyPair;
-import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.util.Arrays;
-import java.util.UUID;
 
 /**
  * @author ZnPi
@@ -165,7 +165,7 @@ public class AuthorizationServerConfiguration {
         RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
         RSAKey rsaKey = new RSAKey.Builder(publicKey)
                 .privateKey(privateKey)
-                .keyID(UUID.randomUUID().toString())
+                .keyID("pi-cloud")
                 .build();
         JWKSet jwkSet = new JWKSet(rsaKey);
         return new ImmutableJWKSet<>(jwkSet);
@@ -177,7 +177,7 @@ public class AuthorizationServerConfiguration {
      */
     @Bean
     public ProviderSettings providerSettings() {
-        return ProviderSettings.builder().issuer("http://localhost:8007").build();
+        return ProviderSettings.builder().issuer("http://pi:9731/auth").build();
     }
 
     /**
@@ -209,15 +209,17 @@ public class AuthorizationServerConfiguration {
     }
 
     /**
-     * java.security.KeyPair 实例，生成 JWT 公钥和私钥
+     * java.security.KeyPair 实例，加载 JWT 公钥和私钥
      * @return /
      */
     private static KeyPair generateRsaKey() {
         KeyPair keyPair;
         try {
-            KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-            keyPairGenerator.initialize(2048);
-            keyPair = keyPairGenerator.generateKeyPair();
+            KeyStoreKeyFactory factory = new KeyStoreKeyFactory(
+                    new ClassPathResource("pi-cloud.jks"),
+                    "123456".toCharArray()
+            );
+            keyPair = factory.getKeyPair("pi-cloud-jwt", "123456".toCharArray());
         }
         catch (Exception ex) {
             throw new IllegalStateException(ex);

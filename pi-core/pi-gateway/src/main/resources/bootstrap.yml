@@ -13,5 +13,5 @@ spring:
         file-extension: yaml
         extension-configs:
           - data-id: pi-common.yaml
-              refresh: true
+            refresh: true
           - data-id: pi-redis.yaml
