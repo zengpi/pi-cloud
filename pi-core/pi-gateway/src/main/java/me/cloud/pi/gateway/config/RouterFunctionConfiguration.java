@@ -18,6 +18,7 @@ package me.cloud.pi.gateway.config;
 
 import lombok.RequiredArgsConstructor;
 import me.cloud.pi.gateway.handler.CaptchaHandler;
+import org.springdoc.core.annotations.RouterOperation;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.server.RouterFunction;

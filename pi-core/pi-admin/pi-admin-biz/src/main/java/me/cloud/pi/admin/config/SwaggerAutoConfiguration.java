@@ -16,12 +16,13 @@
 
 package me.cloud.pi.admin.config;
 
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.security.OAuthFlow;
 import io.swagger.v3.oas.models.security.OAuthFlows;
-import io.swagger.v3.oas.models.security.Scopes;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
 import lombok.RequiredArgsConstructor;
@@ -30,30 +31,32 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 
 import java.util.ArrayList;
-import java.util.List;
 
 @RequiredArgsConstructor
 @Configuration
 public class SwaggerAutoConfiguration {
 
-	@Bean
-	public OpenAPI customOpenAPI() {
-		List<Server> serverList = new ArrayList<>();
-		serverList.add(new Server().url("http://localhost:9731/admin"));
+    @Bean
+    public OpenAPI openAPI() {
+        return new OpenAPI()
+                .info(new Info()
+                        .title("PI-ADMIN")
+                        .description("管理服务")
+                        .version("1.0.0-SNAPSHOT")
+                        .license(new License().name("Apache 2.0")
+                                .url("https://www.apache.org/licenses/LICENSE-2.0.html")))
+                .externalDocs(new ExternalDocumentation()
+                        .description("Pi Cloud 参考文档")
+                        .url("https://www.yuque.com/zengpi/szfuh0"))
+                .components(new Components()
+                        .addSecuritySchemes(HttpHeaders.AUTHORIZATION, new SecurityScheme()
+                                .type(SecurityScheme.Type.OAUTH2)
+                                .flows(new OAuthFlows()
+                                        .password(new OAuthFlow()
+                                                .tokenUrl("http://localhost:9731/auth/oauth2/token")))))
 
-		return new OpenAPI()
-				.schemaRequirement(HttpHeaders.AUTHORIZATION, new SecurityScheme()
-								.type(SecurityScheme.Type.OAUTH2)
-								.flows(new OAuthFlows()
-										.password(new OAuthFlow()
-												.tokenUrl("http://localhost:9731/auth/oauth2/token")
-												.scopes(new Scopes()
-														.addString("server", "server scope"))))
-						)
-				.info(new Info()
-						.title("PI-ADMIN")
-						.version("1.0.0-SNAPSHOT")
-						.license(new License().name("Apache 2.0")))
-				.servers(serverList);
-	}
+                .servers(new ArrayList<Server>() {{
+                    add(new Server().url("http://localhost:9731/admin"));
+                }});
+    }
 }
