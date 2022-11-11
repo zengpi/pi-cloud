@@ -17,6 +17,9 @@
 package me.cloud.pi.admin.controller;
 
 import cn.hutool.core.lang.tree.Tree;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import me.cloud.pi.admin.pojo.dto.MenuDTO;
 import me.cloud.pi.admin.pojo.query.MenuQueryParam;
@@ -25,6 +28,7 @@ import me.cloud.pi.admin.service.MenuService;
 import me.cloud.pi.admin.service.RoleMenuService;
 import me.cloud.pi.common.web.pojo.vo.SelectTreeVO;
 import me.cloud.pi.common.web.util.ResponseData;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,6 +40,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/menu")
 @RequiredArgsConstructor
+@Tag(name = "MenuController", description = "菜单管理")
+@SecurityRequirement(name = HttpHeaders.AUTHORIZATION)
 public class MenuController {
     private final MenuService menuService;
     private final RoleMenuService roleMenuService;
@@ -45,6 +51,7 @@ public class MenuController {
      *
      * @return 菜单列表
      */
+    @Operation(summary = "获取所有菜单列表")
     @GetMapping
     public ResponseData<List<MenuVO>> getMenus(MenuQueryParam query) {
         return ResponseData.ok(menuService.getMenus(query));

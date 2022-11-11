@@ -17,6 +17,7 @@
 package me.cloud.pi.auth.extension;
 
 import lombok.SneakyThrows;
+import me.cloud.pi.auth.constant.SecurityConstants;
 import me.cloud.pi.common.web.util.HttpEndpointUtils;
 import me.cloud.pi.common.web.util.ResponseData;
 import org.springframework.core.convert.converter.Converter;
@@ -40,6 +41,12 @@ import java.util.Map;
  * @date 2022-10-21
  */
 public class PiAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
+    /**
+     * 指定响应数据不使用 ResponseData 封装的参数名称
+     * Swagger 登录时可用
+     */
+    private static final String NO_RESPONSE_DATA_PARAM_NAME = "no_response_data";
+
     private final Converter<OAuth2AccessTokenResponse, Map<String, Object>> accessTokenResponseParametersConverter =
             new DefaultOAuth2AccessTokenResponseMapConverter();
 
@@ -65,8 +72,14 @@ public class PiAuthenticationSuccessHandler implements AuthenticationSuccessHand
         }
         OAuth2AccessTokenResponse accessTokenResponse = builder.build();
         Map<String, Object> tokenResponseParameters = this.accessTokenResponseParametersConverter.convert(accessTokenResponse);
-        ResponseData<Map<String, Object>> responseData = ResponseData.ok(tokenResponseParameters);
         ServletServerHttpResponse httpResponse = new ServletServerHttpResponse(response);
-        HttpEndpointUtils.writeWithMessageConverters(responseData, httpResponse);
+
+        boolean noResponseData = Boolean.parseBoolean(request.getParameter(NO_RESPONSE_DATA_PARAM_NAME));
+        if(noResponseData){
+            HttpEndpointUtils.writeWithMessageConverters(tokenResponseParameters, httpResponse);
+        }else{
+            ResponseData<Map<String, Object>> responseData = ResponseData.ok(tokenResponseParameters);
+            HttpEndpointUtils.writeWithMessageConverters(responseData, httpResponse);
+        }
     }
 }

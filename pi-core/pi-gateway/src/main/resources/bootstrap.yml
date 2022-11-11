@@ -15,3 +15,8 @@ spring:
           - data-id: pi-common.yaml
             refresh: true
           - data-id: pi-redis.yaml
+springdoc:
+  swagger-ui:
+    oauth:
+      additionalQueryStringParams:
+        no_response_data: true
