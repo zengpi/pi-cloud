@@ -44,6 +44,10 @@
         </dependency>
         <dependency>
             <groupId>me.cloud.pi</groupId>
+            <artifactId>pi-common-redis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>me.cloud.pi</groupId>
             <artifactId>pi-common-security</artifactId>
         </dependency>
     </dependencies>

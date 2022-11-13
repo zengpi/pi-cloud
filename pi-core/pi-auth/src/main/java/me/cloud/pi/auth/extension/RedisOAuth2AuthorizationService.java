@@ -17,6 +17,7 @@
 package me.cloud.pi.auth.extension;
 
 import lombok.RequiredArgsConstructor;
+import me.cloud.pi.common.redis.constant.CacheConstants;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.core.OAuth2AuthorizationCode;
@@ -41,7 +42,6 @@ import java.util.concurrent.TimeUnit;
 @Component
 @RequiredArgsConstructor
 public class RedisOAuth2AuthorizationService implements OAuth2AuthorizationService {
-    private static final String AUTHORIZATION = "token";
     private final static Long TIMEOUT = 10L;
 
     private final RedisTemplate<String, Object> redisTemplate;
@@ -139,6 +139,6 @@ public class RedisOAuth2AuthorizationService implements OAuth2AuthorizationServi
     }
 
     private String buildKey(String type, String id) {
-        return String.format("%s:%s:%s", AUTHORIZATION, type, id);
+        return String.format("%s:%s:%s", CacheConstants.TOKEN, type, id);
     }
 }

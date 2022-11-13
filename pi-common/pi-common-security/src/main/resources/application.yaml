@@ -1,0 +1,7 @@
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          # issuer-uri: http://pi:9731/auth
+          public-key-location: classpath:key.pub

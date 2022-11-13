@@ -34,6 +34,7 @@ import me.cloud.pi.admin.service.RoleService;
 import me.cloud.pi.admin.service.UserRoleService;
 import me.cloud.pi.common.mybatis.util.PiPage;
 import me.cloud.pi.common.web.exception.BadRequestException;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -98,6 +99,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, SysRole> implements
     }
 
     @Override
+    @CacheEvict(value = "users", allEntries = true)
     public void allocationRoleUser(AllocationRoleUserDTO dto) {
         if (StrUtil.isNotBlank(dto.getAddUserIds())) {
             HashSet<SysUserRole> addUserRoles = new HashSet<>();

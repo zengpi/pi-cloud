@@ -60,6 +60,14 @@ public interface UserService extends IService<SysUser> {
     UserInfoVO getUserInfo();
 
     /**
+     * 获取用户信息
+     *
+     * @param username 用户名
+     * @return /
+     */
+    UserInfoVO getUserInfo(String username);
+
+    /**
      * 修改用户信息
      *
      * @param userEditDTO 待修改用户信息

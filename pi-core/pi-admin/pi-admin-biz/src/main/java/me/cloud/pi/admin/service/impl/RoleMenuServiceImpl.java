@@ -26,6 +26,8 @@ import me.cloud.pi.admin.pojo.po.SysMenu;
 import me.cloud.pi.admin.pojo.po.SysRoleMenu;
 import me.cloud.pi.admin.service.MenuService;
 import me.cloud.pi.admin.service.RoleMenuService;
+import me.cloud.pi.common.redis.constant.CacheConstants;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -62,6 +64,7 @@ public class RoleMenuServiceImpl extends ServiceImpl<RoleMenuMapper, SysRoleMenu
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @CacheEvict(value = {CacheConstants.CACHE_MENU, CacheConstants.CACHE_USER}, allEntries = true)
     public void allocationRoleMenu(AllocationRoleMenuDTO dto) {
         Set<Long> menuIdSet = null;
         if (StrUtil.isNotBlank(dto.getMenuIds())) {

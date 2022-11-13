@@ -39,6 +39,7 @@ import me.cloud.pi.admin.pojo.vo.UserInfoVO;
 import me.cloud.pi.admin.pojo.vo.UserVO;
 import me.cloud.pi.admin.service.*;
 import me.cloud.pi.common.mybatis.util.PiPage;
+import me.cloud.pi.common.redis.constant.CacheConstants;
 import me.cloud.pi.common.security.constant.SecurityConstants;
 import me.cloud.pi.common.security.util.SecurityUtils;
 import me.cloud.pi.common.util.ValidationUtil;
@@ -47,10 +48,16 @@ import me.cloud.pi.common.web.enums.ResponseStatus;
 import me.cloud.pi.common.web.exception.BadRequestException;
 import me.cloud.pi.common.web.pojo.query.BaseQueryParam;
 import me.cloud.pi.common.web.util.FileUtil;
+import org.springframework.aop.framework.AopContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
@@ -79,6 +86,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SysUser> implements
     private final PasswordEncoder passwordEncoder;
     private final UserConverter userConverter;
     private final DeptMapper deptMapper;
+    @Resource
+    @Lazy
+    private UserServiceImpl userServiceImpl;
 
     @Override
     public PiPage<UserVO> getUsers(UserQueryParam query) {
@@ -120,12 +130,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SysUser> implements
     }
 
     @Override
-    public UserInfoVO getUserInfo() {
+    public UserInfoVO getUserInfo(){
+        return userServiceImpl.getUserInfo(SecurityUtils.getUserName());
+    }
+
+    @Override
+    @Cacheable(CacheConstants.CACHE_USER)
+    public UserInfoVO getUserInfo(String username) {
         UserInfoVO userInfoVO = new UserInfoVO();
 
         // 用户信息
         SysUser sysUser = super.getOne(Wrappers.lambdaQuery(SysUser.class)
-                .eq(SysUser::getUsername, SecurityUtils.getUserName())
+                .eq(SysUser::getUsername, username)
                 .select(SysUser::getId, SysUser::getUsername, SysUser::getNickname, SysUser::getAvatar, SysUser::getPhone));
         userInfoVO.setUserInfo(userConverter.userPoToUserInfo(sysUser));
 
@@ -152,6 +168,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SysUser> implements
     }
 
     @Override
+    @CacheEvict(value = CacheConstants.CACHE_USER, allEntries = true)
     public void editPersonalInfo(UserEditDTO userEditDTO) {
         // 获取当前用户名
         String userName = SecurityUtils.getUserName();
@@ -187,6 +204,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, SysUser> implements
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @CacheEvict(value = CacheConstants.CACHE_USER, allEntries = true)
     public void edit(UserEditForm userEditForm) {
         if (userEditForm.getId() == null) {
             throw new BadRequestException(ResponseStatus.REQUEST_PARAM_ERROR, "id 不能为空");
