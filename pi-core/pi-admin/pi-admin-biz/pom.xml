@@ -29,11 +29,11 @@
             <artifactId>springdoc-openapi-ui</artifactId>
             <version>1.6.12</version>
         </dependency>
-        <dependency>
-            <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-security</artifactId>
-            <version>1.6.12</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.springdoc</groupId>-->
+<!--            <artifactId>springdoc-openapi-security</artifactId>-->
+<!--            <version>1.6.12</version>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>org.mapstruct</groupId>
@@ -51,6 +51,10 @@
         <dependency>
             <groupId>me.cloud.pi</groupId>
             <artifactId>pi-common-mybatis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>me.cloud.pi</groupId>
+            <artifactId>pi-common-redis</artifactId>
         </dependency>
         <dependency>
             <groupId>me.cloud.pi</groupId>

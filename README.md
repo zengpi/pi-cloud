@@ -18,11 +18,10 @@ pi-cloud 是基于 Spring Cloud 2021 & Spring Cloud Alibaba 2021、Spring Boot 2
 
 ## 源码
 
-|      | Gitee                                                | GitHub                                          |
-| ---- | ---------------------------------------------------- | ----------------------------------------------- |
-| 后端 | https://gitee.com/linjiabin100/pi-cloud.git          | https://github.com/zengpi/pi-cloud.git          |
-| 前端 | https://gitee.com/linjiabin100/pi-cloud-web.git      | https://github.com/zengpi/pi-cloud-web.git      |
-| 资源 | https://gitee.com/linjiabin100/pi-cloud-resource.git | https://github.com/zengpi/pi-cloud-resource.git |
+|      | Gitee                                           | GitHub                                     |
+| ---- | ----------------------------------------------- | ------------------------------------------ |
+| 后端 | https://gitee.com/linjiabin100/pi-cloud.git     | https://github.com/zengpi/pi-cloud.git     |
+| 前端 | https://gitee.com/linjiabin100/pi-cloud-web.git | https://github.com/zengpi/pi-cloud-web.git |
 
 ## 参考文档
 
@@ -100,6 +99,7 @@ spring:
 192.168.126.128 pi
 192.168.126.128 pi-redis
 192.168.126.128 pi-nacos
+192.168.126.128 pi-db
 ```
 
 其中，`192.168.126.128` 为我的虚拟机的 IP，您需要将它修改成你自己的。
@@ -110,13 +110,7 @@ spring:
 
 ### 导入 Nacos
 
-打开浏览器，访问 http://pi-nacos:8848 （pi-nacos 是 hosts 文件中定义的，如果你没有修改该文件，请将它改成你的主机对应的 IP），输入用户名密码（默认为 nacos/nacos），在“配置管理”的“配置列表”中，点击“导入配置”，选择项目目录下的 `resources/nacos_config_export_xxx.zip`，确认即可。
-
-或者，你可以克隆 [资源](https://gitee.com/linjiabin100/pi-cloud-resource.git) 仓库，它也包含了 Nacos 的配置，你可以很容易发现它（就在 `pi-cloud-resource` 的根目录下）：
-
-```shell
-$ git clone https://gitee.com/linjiabin100/pi-cloud-resource.git
-```
+打开浏览器，访问 http://pi-nacos:8848 （pi-nacos 是 hosts 文件中定义的，如果你没有修改该文件，请将它改成你的主机对应的 IP），输入用户名密码（默认为 nacos/nacos），在“配置管理”的“配置列表”中，点击“导入配置”，选择项目目录下的 `resources/25-37313-P1_GERBER.zip`，确认即可。
 
 **如果你的 MySQL 和 Redis 的密码与系统要求中的不一致，您需要修改它们。**
 
@@ -156,20 +150,5 @@ pi:
 pi-core/pi-admin/pi-admin-boot/**/AdminApp.java
 pi-core/pi-auth/**/AuthApp.java
 pi-core/pi-gateway/**/Gateway.java
-```
-
-或者，在 [资源](https://gitee.com/linjiabin100/pi-cloud-resource.git) 仓库的 bin 目录中，你会发现相对应的 jar：
-
-```
-pi-admin-biz-xxx.jar
-pi-auth-xxx.jar
-pi-gateway-xxx.jar
-```
-
-打开命令行工具，执行 `java -jar` 命令：
-
-```shell
-$ java -jar pi-admin-biz-xxx.jar
-...
 ```
 

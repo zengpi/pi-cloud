@@ -16,24 +16,26 @@
 
 package me.cloud.pi.gateway.config;
 
-import org.springdoc.core.GroupedOpenApi;
+import lombok.RequiredArgsConstructor;
 import org.springdoc.core.SwaggerUiConfigParameters;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.annotation.PostConstruct;
 
-@Configuration(proxyBeanMethods = false)
+/**
+ * SpringDoc 分组设置
+ * @author ZnPi
+ * @date 2022-11-11
+ */
+@Component
+@RequiredArgsConstructor
 public class SpringDocConfiguration {
 
-	@Bean
-	@Lazy(false)
-	public List<GroupedOpenApi> apis(SwaggerUiConfigParameters swaggerUiConfigParameters) {
-		List<GroupedOpenApi> groups = new ArrayList<>();
-		swaggerUiConfigParameters.addGroup("admin");
+	private final SwaggerUiConfigParameters swaggerUiConfigParameters;
 
-		return groups;
+	@PostConstruct
+	public void init() {
+		swaggerUiConfigParameters.addGroup("admin");
+		swaggerUiConfigParameters.addGroup("auth");
 	}
 }

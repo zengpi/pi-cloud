@@ -45,6 +45,13 @@ public interface MenuService extends IService<SysMenu> {
     List<Tree<Long>> buildMenu();
 
     /**
+     * 构建当前用户的树形菜单
+     * @param username 用户名，用于缓存 key
+     * @return 当前用户的树形菜单
+     */
+    List<Tree<Long>> buildMenu(String username);
+
+    /**
      * 获取菜单
      * @param query 查询条件
      * @return 菜单列表

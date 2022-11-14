@@ -18,12 +18,15 @@ package me.cloud.pi.admin.pojo.vo;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * @author ZnPi
  * @date 2022-08-19
  */
 @Data
-public class UserInfoVO {
+public class UserInfoVO implements Serializable {
+    private static final long serialVersionUID = 5131551841734401217L;
     /**
      * 用户信息
      */
@@ -40,7 +43,8 @@ public class UserInfoVO {
     private String[] roles;
 
     @Data
-    public static class UserInfo {
+    public static class UserInfo implements Serializable{
+        private static final long serialVersionUID = 2028677663877849897L;
         private Long id;
         private String username;
         private String nickname;

@@ -32,13 +32,18 @@ import me.cloud.pi.admin.pojo.po.SysMenu;
 import me.cloud.pi.admin.pojo.query.MenuQueryParam;
 import me.cloud.pi.admin.pojo.vo.MenuVO;
 import me.cloud.pi.admin.service.MenuService;
+import me.cloud.pi.common.redis.constant.CacheConstants;
 import me.cloud.pi.common.security.util.SecurityUtils;
 import me.cloud.pi.common.web.constant.PiConstants;
 import me.cloud.pi.common.web.enums.MenuTypeEnum;
 import me.cloud.pi.common.web.exception.BadRequestException;
 import me.cloud.pi.common.web.pojo.vo.SelectTreeVO;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -53,6 +58,10 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, SysMenu> implements
     private final MenuMapper menuMapper;
     private final MenuConverter menuConverter;
 
+    @Resource
+    @Lazy
+    private MenuService menuService;
+
     @Override
     public List<SysMenu> listPermissionByRoleIds(Long[] ids) {
         return menuMapper.listPermissionByRoleIds(ids);
@@ -60,6 +69,12 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, SysMenu> implements
 
     @Override
     public List<Tree<Long>> buildMenu() {
+        return menuService.buildMenu(SecurityUtils.getUserName());
+    }
+
+    @Override
+    @Cacheable(value = CacheConstants.CACHE_MENU, key = "#username")
+    public List<Tree<Long>> buildMenu(String username) {
         ArrayList<String> roleCodeList = (ArrayList<String>) SecurityUtils.getRoleCodeList();
         if (roleCodeList.size() == 0) {
             return Collections.emptyList();
@@ -123,12 +138,13 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, SysMenu> implements
     }
 
     @Override
+    @CacheEvict(value = CacheConstants.CACHE_MENU, allEntries = true)
     public void saveOrUpdate(MenuDTO dto) {
         if (dto.getParentId().equals(dto.getId())) {
             throw new BadRequestException("上级类目不能为自己！");
         }
         if (dto.getType() == 1) {
-            dto.setComponentName("Layout");
+            dto.setComponentName("Navigation");
         }
         SysMenu menu = menuConverter.menuDtoToMenuPo(dto);
         super.saveOrUpdate(menu);
