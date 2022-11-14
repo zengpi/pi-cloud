@@ -18,6 +18,7 @@ package me.cloud.pi.admin.pojo.vo;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -26,7 +27,9 @@ import java.util.List;
  * @date 2022-09-21
  */
 @Data
-public class MenuVO {
+public class MenuVO implements Serializable {
+    private static final long serialVersionUID = -3992266652124385316L;
+
     /**
      * 唯一标识
      */

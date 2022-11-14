@@ -16,10 +16,12 @@
 
 package me.cloud.pi.common.security.config;
 
+import lombok.RequiredArgsConstructor;
 import me.cloud.pi.common.security.extension.PiAuthenticationEntryPoint;
+import me.cloud.pi.common.security.extension.PiBearerTokenResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
@@ -34,17 +36,22 @@ import org.springframework.security.web.SecurityFilterChain;
  */
 @Configuration
 @EnableMethodSecurity
+@RequiredArgsConstructor
 public class ResourceServerConfiguration {
+    private final RedisTemplate<String, Object> redisTemplate;
+    private final HttpSecurity http;
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain() throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
                         .antMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
-                        .authenticationEntryPoint(piAuthenticationEntryPoint()).jwt());
+                        .bearerTokenResolver(new PiBearerTokenResolver(redisTemplate))
+                        .authenticationEntryPoint(piAuthenticationEntryPoint())
+                        .jwt());
         return http.build();
     }
 
