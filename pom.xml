@@ -32,6 +32,7 @@
 		<easy-captcha.version>2.2.2</easy-captcha.version>
 		<fastjson2.version>2.0.12</fastjson2.version>
 		<mapstruct.version>1.5.2.Final</mapstruct.version>
+		<springdoc.version>1.6.12</springdoc.version>
 
 		<lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
 
@@ -103,6 +104,11 @@
 				<artifactId>mapstruct</artifactId>
 				<version>${mapstruct.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>org.springdoc</groupId>
+				<artifactId>springdoc-openapi-ui</artifactId>
+				<version>${springdoc.version}</version>
+			</dependency>
 
 			<dependency>
 				<groupId>me.cloud.pi</groupId>
@@ -132,6 +138,11 @@
 			<dependency>
 				<groupId>me.cloud.pi</groupId>
 				<artifactId>pi-common-web</artifactId>
+				<version>${pi.cloud-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>me.cloud.pi</groupId>
+				<artifactId>pi-common-swagger</artifactId>
 				<version>${pi.cloud-version}</version>
 			</dependency>
 		</dependencies>

@@ -18,8 +18,3 @@ spring:
             refresh: true
           - dataId: pi-mybatis.yaml
           - dataId: pi-redis.yaml
-#springdoc:
-#  swagger-ui:
-#    oauth:
-#      additionalQueryStringParams:
-#        no_response_data: true
