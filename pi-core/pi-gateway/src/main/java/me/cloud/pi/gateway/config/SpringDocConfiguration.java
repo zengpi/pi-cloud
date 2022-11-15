@@ -18,24 +18,31 @@ package me.cloud.pi.gateway.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.SwaggerUiConfigParameters;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 
 /**
  * SpringDoc 分组设置
- * @author ZnPi
+ *
+ * @author lw
  * @date 2022-11-11
  */
 @Component
 @RequiredArgsConstructor
+@EnableConfigurationProperties(SpringDocConfigProperties.class)
 public class SpringDocConfiguration {
 
-	private final SwaggerUiConfigParameters swaggerUiConfigParameters;
+    private final SwaggerUiConfigParameters swaggerUiConfigParameters;
+    private final SpringDocConfigProperties configProperties;
 
-	@PostConstruct
-	public void init() {
-		swaggerUiConfigParameters.addGroup("admin");
-		swaggerUiConfigParameters.addGroup("auth");
-	}
+    @PostConstruct
+    public void init() {
+        if (configProperties.getServers() != null) {
+            for (String value : configProperties.getServers().values()) {
+                swaggerUiConfigParameters.addGroup(value);
+            }
+        }
+    }
 }

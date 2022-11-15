@@ -63,6 +63,7 @@ public class MenuController {
      * @param containBtn 是否包含按钮
      * @return /
      */
+    @Operation(summary = "菜单树形选择")
     @GetMapping("/selectTree")
     public ResponseData<List<SelectTreeVO>> selectTree(boolean containBtn) {
         return ResponseData.ok(menuService.selectTree(containBtn));
@@ -73,6 +74,7 @@ public class MenuController {
      *
      * @return 当前用户的树形菜单
      */
+    @Operation(summary = "返回当前用户的树形菜单")
     @GetMapping("/buildMenu")
     public ResponseData<List<Tree<Long>>> buildMenu() {
         return ResponseData.ok(menuService.buildMenu());
@@ -84,6 +86,7 @@ public class MenuController {
      * @param dto 菜单表单 DTO
      * @return /
      */
+    @Operation(summary = "新增或编辑")
     @RequestMapping(method = {RequestMethod.POST, RequestMethod.PUT})
     public ResponseData<?> saveOrUpdate(@RequestBody MenuDTO dto) {
         menuService.saveOrUpdate(dto);
@@ -95,6 +98,7 @@ public class MenuController {
      * @param ids 菜单 ID，多个以逗号分隔
      * @return /
      */
+    @Operation(summary = "删除")
     @DeleteMapping
     public ResponseData<?> delete(String ids){
         menuService.delete(ids);
@@ -106,6 +110,7 @@ public class MenuController {
      * @param roleId 角色 ID
      * @return 菜单 ID 列表
      */
+    @Operation(summary = "根据角色 ID 获取菜单 ID 列表")
     @GetMapping("/menuLeafIds/{roleId}")
     public ResponseData<List<Long>> getMenuLeafIdsByRoleId(@PathVariable Long roleId){
         return ResponseData.ok(roleMenuService.getMenuLeafIdsByRoleId(roleId));

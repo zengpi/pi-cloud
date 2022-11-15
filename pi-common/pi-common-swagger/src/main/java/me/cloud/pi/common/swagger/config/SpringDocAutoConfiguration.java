@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package me.cloud.pi.admin.config;
+package me.cloud.pi.common.swagger.config;
 
+import cn.hutool.core.util.StrUtil;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -27,25 +28,53 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 
 import java.util.ArrayList;
 
-@RequiredArgsConstructor
-@Configuration
+/**
+ * @author lw
+ * @date 2022-11-15
+ */
 @Data
-public class SwaggerAutoConfiguration {
-    private final Swagger swagger;
+@Configuration
+@RequiredArgsConstructor
+@EnableConfigurationProperties(SpringDocConfigProperties.class)
+public class SpringDocAutoConfiguration {
+    private SpringDocConfigProperties springDocConfigProperties;
+
+    private ServiceInstance serviceInstance;
+
+    @Autowired
+    private void setSpringDocConfigProperties(SpringDocConfigProperties springDocConfigProperties){
+        this.springDocConfigProperties = springDocConfigProperties;
+    }
+
+    @Autowired(required = false)
+    public void setServiceInstance(ServiceInstance serviceInstance) {
+        this.serviceInstance = serviceInstance;
+    }
 
     @Bean
-    public OpenAPI openAPI() {
+    public OpenAPI openApi() {
+        ArrayList<Server> servers = new ArrayList<>();
+        if (serviceInstance != null && springDocConfigProperties.getServers() != null) {
+            String server = springDocConfigProperties.getServers().get(serviceInstance.getServiceId());
+            if (StrUtil.isNotBlank(server)) {
+                servers.add(new Server().url(springDocConfigProperties.getServerGateway() + "/" + server));
+            }
+        }
+
         return new OpenAPI()
                 .info(new Info()
-                        .title(swagger.getTitle())
-                        .description(swagger.getDescription())
-                        .version(swagger.getVersion())
+                        .title(springDocConfigProperties.getTitle())
+                        .description(springDocConfigProperties.getDescription())
+                        .version(springDocConfigProperties.getVersion())
                         .license(new License().name("Apache 2.0")
                                 .url("https://www.apache.org/licenses/LICENSE-2.0.html")))
                 .externalDocs(new ExternalDocumentation()
@@ -56,10 +85,7 @@ public class SwaggerAutoConfiguration {
                                 .type(SecurityScheme.Type.OAUTH2)
                                 .flows(new OAuthFlows()
                                         .password(new OAuthFlow()
-                                                .tokenUrl(String.format("http://{ip}:9731/auth/oauth2/token", swagger.getIp()))))))
-
-                .servers(new ArrayList<Server>() {{
-                    add(new Server().url(String.format("http://{ip}:9731/admin", swagger.getIp())));
-                }});
+                                                .tokenUrl(springDocConfigProperties.getTokenUrl())))))
+                .servers(servers);
     }
 }

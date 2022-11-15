@@ -16,10 +16,14 @@
 
 package me.cloud.pi.admin.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import me.cloud.pi.admin.pojo.vo.DeptTreeVO;
 import me.cloud.pi.admin.service.DeptService;
 import me.cloud.pi.common.web.util.ResponseData;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,9 +37,17 @@ import java.util.List;
 @RestController
 @RequestMapping("dept")
 @RequiredArgsConstructor
+@Tag(name = "DeptController", description = "部门管理")
+@SecurityRequirement(name = HttpHeaders.AUTHORIZATION)
 public class DeptController {
     private final DeptService deptService;
 
+    /**
+     * 返回部门的树形菜单
+     *
+     * @return 当前用户的树形菜单
+     */
+    @Operation(summary = "返回部门的树形菜单")
     @GetMapping("/deptTree")
     public ResponseData<List<DeptTreeVO>> deptTree(){
         return ResponseData.ok(deptService.getDeptTree());

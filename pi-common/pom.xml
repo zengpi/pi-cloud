@@ -18,5 +18,6 @@
         <module>pi-common-util</module>
         <module>pi-common-security</module>
         <module>pi-common-web</module>
+        <module>pi-common-swagger</module>
     </modules>
 </project>
