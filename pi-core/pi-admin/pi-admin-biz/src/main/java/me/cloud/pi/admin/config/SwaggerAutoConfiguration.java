@@ -25,6 +25,7 @@ import io.swagger.v3.oas.models.security.OAuthFlow;
 import io.swagger.v3.oas.models.security.OAuthFlows;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,15 +35,17 @@ import java.util.ArrayList;
 
 @RequiredArgsConstructor
 @Configuration
+@Data
 public class SwaggerAutoConfiguration {
+    private final Swagger swagger;
 
     @Bean
     public OpenAPI openAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("PI-ADMIN")
-                        .description("管理服务")
-                        .version("1.0.0-SNAPSHOT")
+                        .title(swagger.getTitle())
+                        .description(swagger.getDescription())
+                        .version(swagger.getVersion())
                         .license(new License().name("Apache 2.0")
                                 .url("https://www.apache.org/licenses/LICENSE-2.0.html")))
                 .externalDocs(new ExternalDocumentation()
@@ -53,10 +56,10 @@ public class SwaggerAutoConfiguration {
                                 .type(SecurityScheme.Type.OAUTH2)
                                 .flows(new OAuthFlows()
                                         .password(new OAuthFlow()
-                                                .tokenUrl("http://localhost:9731/auth/oauth2/token")))))
+                                                .tokenUrl(String.format("http://{ip}:9731/auth/oauth2/token", swagger.getIp()))))))
 
                 .servers(new ArrayList<Server>() {{
-                    add(new Server().url("http://localhost:9731/admin"));
+                    add(new Server().url(String.format("http://{ip}:9731/admin", swagger.getIp())));
                 }});
     }
 }
