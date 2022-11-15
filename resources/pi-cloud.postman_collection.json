@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "5f2ce2b2-f273-47d7-adc8-d6690fa14af3",
-		"name": "pi-cloud_v1.0.0-SNAPSHOT",
+		"name": "pi-cloud",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -145,10 +145,13 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:9731/auth/oauth2/token?grant_type=authorization_code&code=34897njbpG7KUnGoUF8_G_7cYan87CNdTswp6mzHREZyN1NdpRljB1S0851mqe6mq74upPC7bM5r7PynqZYH14oO5Zz0puaSMsjaLf6yZJ9dx0a_lCQhvfInX0OucTg6&redirect_uri=http://127.0.0.1:8080/authorized",
+					"raw": "http://10.30.2.158:9731/auth/oauth2/token?grant_type=authorization_code&code=BjzEDfmEKcpUt8c_Q-aZDBCCn9J6fYqMIQL_D6dzY3wDp2cONN2s8IMjbezRnf-AtD1M514RTRlGlHMU9AqiGK2GKR9Yo-fwlAxXpLU5DisSyPShlswO_V5z5hJf-N6r&redirect_uri=http://127.0.0.1:8080/authorized",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"10",
+						"30",
+						"2",
+						"158"
 					],
 					"port": "9731",
 					"path": [
@@ -163,7 +166,7 @@
 						},
 						{
 							"key": "code",
-							"value": "34897njbpG7KUnGoUF8_G_7cYan87CNdTswp6mzHREZyN1NdpRljB1S0851mqe6mq74upPC7bM5r7PynqZYH14oO5Zz0puaSMsjaLf6yZJ9dx0a_lCQhvfInX0OucTg6"
+							"value": "BjzEDfmEKcpUt8c_Q-aZDBCCn9J6fYqMIQL_D6dzY3wDp2cONN2s8IMjbezRnf-AtD1M514RTRlGlHMU9AqiGK2GKR9Yo-fwlAxXpLU5DisSyPShlswO_V5z5hJf-N6r"
 						},
 						{
 							"key": "redirect_uri",

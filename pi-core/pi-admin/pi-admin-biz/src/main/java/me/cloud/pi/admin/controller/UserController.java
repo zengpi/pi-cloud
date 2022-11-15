@@ -20,6 +20,9 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.IdUtil;
 import io.minio.*;
 import io.minio.http.Method;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +38,7 @@ import me.cloud.pi.admin.service.UserService;
 import me.cloud.pi.common.mybatis.util.PiPage;
 import me.cloud.pi.common.web.pojo.query.BaseQueryParam;
 import me.cloud.pi.common.web.util.ResponseData;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -50,6 +54,8 @@ import javax.validation.Valid;
 @RequestMapping("/user")
 @RequiredArgsConstructor
 @Slf4j
+@Tag(name = "UserController", description = "用户管理")
+@SecurityRequirement(name = HttpHeaders.AUTHORIZATION)
 public class UserController {
     private final UserService userService;
 
@@ -60,6 +66,7 @@ public class UserController {
      */
     @GetMapping
     @PreAuthorize("hasAuthority('sys_user_query')")
+    @Operation(summary = "用户查询")
     public ResponseData<PiPage<UserVO>> getUsers(UserQueryParam userQuery) {
         return ResponseData.ok(userService.getUsers(userQuery));
     }
@@ -72,6 +79,7 @@ public class UserController {
      */
     @PostMapping
     @PreAuthorize("hasAuthority('sys_user_add')")
+    @Operation(summary = "新增用户")
     public ResponseData<?> save(@RequestBody @Valid UserForm form) {
         userService.save(form);
         return ResponseData.ok();
@@ -85,6 +93,7 @@ public class UserController {
      */
     @PutMapping
     @PreAuthorize("hasAuthority('sys_user_edit')")
+    @Operation(summary = "编辑用户")
     public ResponseData<?> edit(@RequestBody @Valid UserEditForm userEditForm) {
         userService.edit(userEditForm);
         return ResponseData.ok();
@@ -98,6 +107,7 @@ public class UserController {
      */
     @PreAuthorize("hasAuthority('sys_user_delete')")
     @DeleteMapping("/{ids}")
+    @Operation(summary = "删除")
     public ResponseData<?> delete(@PathVariable String ids) {
         userService.delete(ids);
         return ResponseData.ok();
@@ -111,6 +121,7 @@ public class UserController {
      */
     @GetMapping("/export")
     @SneakyThrows
+    @Operation(summary = "导出用户列表")
     public void export(UserQueryParam query, HttpServletResponse response) {
         userService.export(query, response);
     }
@@ -120,6 +131,7 @@ public class UserController {
      */
     @GetMapping("/userImportTemp")
     @SneakyThrows
+    @Operation(summary = "用户导入模板")
     public void userImportTemp(HttpServletResponse response) {
         userService.downloadUserImportTemp(response);
     }
@@ -130,6 +142,7 @@ public class UserController {
      * @return /
      */
     @PostMapping("/import")
+    @Operation(summary = "导入用户")
     public ResponseData<?> importUser(UserImportDTO dto) {
         return ResponseData.ok(userService.importUser(dto));
     }
@@ -140,6 +153,7 @@ public class UserController {
      * @return 用户信息
      */
     @GetMapping("/info")
+    @Operation(summary = "获取用户信息")
     public ResponseData<UserInfoVO> info() {
         return ResponseData.ok(userService.getUserInfo());
     }
@@ -150,6 +164,7 @@ public class UserController {
      * @return /
      */
     @PutMapping("/profileEdit")
+    @Operation(summary = "修改个人信息")
     public ResponseData<?> editPersonalInfo(@RequestBody UserEditDTO userEditDTO) {
         userService.editPersonalInfo(userEditDTO);
         return ResponseData.ok();
@@ -162,6 +177,7 @@ public class UserController {
      * @return /
      */
     @GetMapping("/passReset")
+    @Operation(summary = "密码重置")
     public ResponseData<?> resetPass(Long id) {
         userService.resetPass(id);
         return ResponseData.ok();
@@ -174,6 +190,7 @@ public class UserController {
      * @return 可选用户列表
      */
     @GetMapping("/optionalUsers")
+    @Operation(summary = "可选用户。如：为角色指定用户时，需要先查询出可以选择的用户列表，然后选择用户")
     public ResponseData<PiPage<OptionalUserVO>> getOptionalUsers(BaseQueryParam query) {
         return ResponseData.ok(userService.getOptionalUsers(query));
     }
@@ -184,6 +201,7 @@ public class UserController {
      */
     @SneakyThrows
     @PostMapping("/uploadAvatar")
+    @Operation(summary = "上传头像")
     public ResponseData<?> uploadAvatar(MultipartFile file, String username, String avatar) {
         // Create a minioClient with the MinIO server, its access key and secret key.
         MinioClient minioClient =
