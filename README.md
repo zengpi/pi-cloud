@@ -110,7 +110,7 @@ spring:
 
 ### 导入 Nacos
 
-打开浏览器，访问 http://pi-nacos:8848 （pi-nacos 是 hosts 文件中定义的，如果你没有修改该文件，请将它改成你的主机对应的 IP），输入用户名密码（默认为 nacos/nacos），在“配置管理”的“配置列表”中，点击“导入配置”，选择项目目录下的 `resources/25-37313-P1_GERBER.zip`，确认即可。
+打开浏览器，访问 http://pi-nacos:8848 （pi-nacos 是 hosts 文件中定义的，如果你没有修改该文件，请将它改成你的主机对应的 IP），输入用户名密码（默认为 nacos/nacos），在“配置管理”的“配置列表”中，点击“导入配置”，选择项目目录下的 `resources/nacos_config_export_xxx.zip`，确认即可。
 
 **如果你的 MySQL 和 Redis 的密码与系统要求中的不一致，您需要修改它们。**
 
