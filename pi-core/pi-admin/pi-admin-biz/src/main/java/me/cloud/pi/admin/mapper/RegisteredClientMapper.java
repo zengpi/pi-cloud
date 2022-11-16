@@ -14,23 +14,14 @@
  * limitations under the License.
  */
 
-package me.cloud.pi.gateway.config;
+package me.cloud.pi.admin.mapper;
 
-import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-
-import java.util.Map;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import me.cloud.pi.admin.pojo.po.SysRegisteredClient;
 
 /**
- * @author lw
- * @date 2022-11-11
+ * @author ZnPi
+ * @date 2022-11-14
  */
-@Data
-@ConfigurationProperties(prefix = SpringDocConfigProperties.PREFIX)
-public class SpringDocConfigProperties {
-        /** Prefix of {@link SpringDocConfigProperties}. */
-        public static final String PREFIX = "springdoc";
-
-        /**服务列表*/
-        private Map<String, String> servers;
+public interface RegisteredClientMapper extends BaseMapper<SysRegisteredClient> {
 }

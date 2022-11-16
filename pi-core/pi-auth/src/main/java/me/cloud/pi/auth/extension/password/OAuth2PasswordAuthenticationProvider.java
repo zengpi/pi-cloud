@@ -79,7 +79,7 @@ public class OAuth2PasswordAuthenticationProvider implements AuthenticationProvi
         RegisteredClient registeredClient = clientPrincipal.getRegisteredClient();
         assert registeredClient != null;
 
-        if (!registeredClient.getAuthorizationGrantTypes().contains(AuthorizationGrantType.CLIENT_CREDENTIALS)) {
+        if (!registeredClient.getAuthorizationGrantTypes().contains(AuthorizationGrantType.PASSWORD)) {
             throw new OAuth2AuthenticationException(OAuth2ErrorCodes.UNAUTHORIZED_CLIENT);
         }
 

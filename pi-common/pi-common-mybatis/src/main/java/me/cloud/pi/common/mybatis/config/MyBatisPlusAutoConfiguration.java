@@ -21,24 +21,29 @@ import me.cloud.pi.common.mybatis.handler.PiMetaObjectHandler;
 import me.cloud.pi.common.mybatis.handler.SecurityMetaObjectHandler;
 import me.cloud.pi.common.security.config.ResourceServerConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.core.annotation.Order;
 
 /**
  * @author ZnPi
  * @date 2022-08-30
  */
 @Configuration
+@Import(MyBatisPlusConfig.class)
 public class MyBatisPlusAutoConfiguration {
     @Bean
-    @ConditionalOnMissingBean(ResourceServerConfiguration.class)
+    @ConditionalOnMissingClass("me.cloud.pi.common.security.config.ResourceServerConfiguration")
     public MetaObjectHandler piMetaObjectHandler(){
         return new PiMetaObjectHandler();
     }
 
     @Bean
-    @ConditionalOnBean(ResourceServerConfiguration.class)
+    @ConditionalOnClass(ResourceServerConfiguration.class)
     public MetaObjectHandler securityMetaObjectHandler(){
         return new SecurityMetaObjectHandler();
     }

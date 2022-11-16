@@ -1,3 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-me.cloud.pi.common.mybatis.config.MyBatisPlusConfig,\
 me.cloud.pi.common.mybatis.config.MyBatisPlusAutoConfiguration

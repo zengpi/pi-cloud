@@ -89,7 +89,9 @@ public class PiAuthenticationFailureHandler implements AuthenticationFailureHand
                     error = ResponseData.error(ResponseStatus.UNSUPPORTED_GRANT_TYPE);
                     break;
                 case OAuth2ErrorCodes.INVALID_REQUEST:
-                    if (description.contains(OAuth2ParameterNames.GRANT_TYPE)) {
+                    if (StrUtil.isBlank(description)) {
+                        error = ResponseData.error(ResponseStatus.UNAUTHORIZED_CLIENT);
+                    } else if (description.contains(OAuth2ParameterNames.GRANT_TYPE)) {
                         error = ResponseData.error(ResponseStatus.GRANT_TYPE_EMPTY);
                     }
                     break;

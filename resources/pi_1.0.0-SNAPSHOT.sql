@@ -4,70 +4,18 @@
  Source Server         : ZnPi
  Source Server Type    : MySQL
  Source Server Version : 80030
- Source Host           : pi:3306
+ Source Host           : pi-db:3306
  Source Schema         : pi
 
  Target Server Type    : MySQL
  Target Server Version : 80030
  File Encoding         : 65001
 
- Date: 04/11/2022 20:46:26
+ Date: 16/11/2022 14:33:49
 */
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
-
--- ----------------------------
--- Table structure for oauth2_registered_client
--- ----------------------------
-DROP TABLE IF EXISTS `oauth2_registered_client`;
-CREATE TABLE `oauth2_registered_client`  (
-  `id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `client_id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `client_id_issued_at` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
-  `client_secret` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `client_secret_expires_at` timestamp(0) NULL DEFAULT NULL,
-  `client_name` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `client_authentication_methods` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `authorization_grant_types` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `redirect_uris` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `scopes` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `client_settings` varchar(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `token_settings` varchar(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of oauth2_registered_client
--- ----------------------------
-INSERT INTO `oauth2_registered_client` VALUES ('883339b7-5df2-40aa-b990-cacc7be5a715', 'messaging-client', '2022-10-22 10:07:35', '{noop}secret', NULL, '883339b7-5df2-40aa-b990-cacc7be5a715', 'client_secret_basic', 'refresh_token,client_credentials,password,authorization_code', 'http://127.0.0.1:8080/authorized,http://127.0.0.1:8080/login/oauth2/code/messaging-client-oidc', 'openid,message.read,message.write', '{\"@class\":\"java.util.Collections$UnmodifiableMap\",\"settings.client.require-proof-key\":false,\"settings.client.require-authorization-consent\":true}', '{\"@class\":\"java.util.Collections$UnmodifiableMap\",\"settings.token.reuse-refresh-tokens\":true,\"settings.token.id-token-signature-algorithm\":[\"org.springframework.security.oauth2.jose.jws.SignatureAlgorithm\",\"RS256\"],\"settings.token.access-token-time-to-live\":[\"java.time.Duration\",300.000000000],\"settings.token.access-token-format\":{\"@class\":\"org.springframework.security.oauth2.core.OAuth2TokenFormat\",\"value\":\"self-contained\"},\"settings.token.refresh-token-time-to-live\":[\"java.time.Duration\",3600.000000000]}');
-INSERT INTO `oauth2_registered_client` VALUES ('f5e35387-231b-4cef-8e4f-f95b2772298f', 'admin', '2022-10-22 22:36:25', '{bcrypt}$2a$10$GLkoQfOQqaggcXog1LYS5.FgqezeOknNsYusUmaf17RdcDXz.Yec.', NULL, 'f5e35387-231b-4cef-8e4f-f95b2772298f', 'client_secret_basic', 'refresh_token,client_credentials,password,authorization_code', 'http://127.0.0.1:8080/authorized,http://127.0.0.1:8080/login/oauth2/code/messaging-client-oidc', 'server', '{\"@class\":\"java.util.Collections$UnmodifiableMap\",\"settings.client.require-proof-key\":false,\"settings.client.require-authorization-consent\":true}', '{\"@class\":\"java.util.Collections$UnmodifiableMap\",\"settings.token.reuse-refresh-tokens\":true,\"settings.token.id-token-signature-algorithm\":[\"org.springframework.security.oauth2.jose.jws.SignatureAlgorithm\",\"RS256\"],\"settings.token.access-token-time-to-live\":[\"java.time.Duration\",60.000000000],\"settings.token.access-token-format\":{\"@class\":\"org.springframework.security.oauth2.core.OAuth2TokenFormat\",\"value\":\"self-contained\"},\"settings.token.refresh-token-time-to-live\":[\"java.time.Duration\",2592000.000000000]}');
-
--- ----------------------------
--- Table structure for sys_client
--- ----------------------------
-DROP TABLE IF EXISTS `sys_client`;
-CREATE TABLE `sys_client`  (
-  `id` bigint(0) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
-  `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '创建人',
-  `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '更新人',
-  `client_id` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '客户端 ID',
-  `client_secret` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '客户端秘钥',
-  `grant_types` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '授权类型',
-  `redirect_uri` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '重定向地址',
-  `scope` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '范围',
-  `access_token_validity` int(0) NULL DEFAULT NULL COMMENT '刷新令牌有效期（单位：秒）',
-  `refresh_token_validity` int(0) NULL DEFAULT NULL COMMENT '访问令牌有效期（单位：秒）',
-  PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE INDEX `uk_client_id`(`client_id`) USING BTREE COMMENT '客户端 ID'
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = 'OAuth 客户端表' ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of sys_client
--- ----------------------------
-INSERT INTO `sys_client` VALUES (1, '2022-08-13 10:00:00', '2022-08-13 10:00:00', 'admin', NULL, 'admin', '{bcrypt}$2a$10$elqPs0LK87ulzb0vcQXfze3TNBvxwB2ntj.0LDMfhGWrLl6sjhHkS', 'authorization_code,refresh_token,client_credentials,password', 'http://127.0.0.1:8000/authorized', 'server', NULL, NULL);
 
 -- ----------------------------
 -- Table structure for sys_dept
@@ -99,7 +47,7 @@ INSERT INTO `sys_dept` VALUES (3, '2022-09-04 11:40:41', NULL, 'admin', NULL, '�
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_menu`;
 CREATE TABLE `sys_menu`  (
-  `id` int(0) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `id` bigint(0) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
   `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
   `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
   `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '创建人',
@@ -119,7 +67,7 @@ CREATE TABLE `sys_menu`  (
   `parent_id` bigint(0) NOT NULL COMMENT '父菜单 ID（-1表示跟菜单）',
   `deleted` tinyint(0) NULL DEFAULT 0 COMMENT '是否删除(0:=未删除; null:=已删除)',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 17 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '菜单表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '菜单表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_menu
@@ -133,6 +81,7 @@ INSERT INTO `sys_menu` VALUES (13, '2022-09-24 11:19:18', NULL, 'admin', NULL, '
 INSERT INTO `sys_menu` VALUES (14, '2022-09-26 20:21:08', '2022-09-26 20:28:50', 'admin', 'admin', '用户查询', NULL, NULL, NULL, 'sys_user_query', NULL, 1, 1, 3, 0, 1, NULL, 2, 0);
 INSERT INTO `sys_menu` VALUES (15, '2022-09-26 20:29:37', NULL, 'admin', NULL, '用户删除', NULL, NULL, NULL, 'sys_user_delete', NULL, 3, 1, 3, 0, 1, NULL, 2, 0);
 INSERT INTO `sys_menu` VALUES (16, '2022-09-26 20:30:06', '2022-09-26 20:30:14', 'admin', 'admin', '用户修改', NULL, NULL, NULL, 'sys_user_edit', NULL, 4, 1, 3, 0, 1, NULL, 2, 0);
+INSERT INTO `sys_menu` VALUES (17, '2022-11-14 16:25:12', '2022-11-14 16:29:13', NULL, NULL, '客户端管理', 'client', 'RegisteredClient', 'system/client/Index', NULL, 'client', 4, 1, 2, 0, 1, NULL, 1, 0);
 
 -- ----------------------------
 -- Table structure for sys_post
@@ -156,6 +105,42 @@ CREATE TABLE `sys_post`  (
 -- Records of sys_post
 -- ----------------------------
 INSERT INTO `sys_post` VALUES (1, '2022-08-18 08:47:21', NULL, 'admin', NULL, 'engineer', '工程师', 1, NULL);
+
+-- ----------------------------
+-- Table structure for sys_registered_client
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_registered_client`;
+CREATE TABLE `sys_registered_client`  (
+  `id` bigint(0) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '唯一标识',
+  `create_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间',
+  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
+  `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '创建人',
+  `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '更新人',
+  `client_id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '客户端 ID',
+  `client_secret` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '客户端密码',
+  `client_secret_expires_at` datetime(0) NULL DEFAULT NULL COMMENT '客户端密码过期时间',
+  `client_name` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '客户端名称',
+  `client_authentication_methods` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '客户端认证方式（client_secret_basic，client_secret_post，private_key_jwt，client_secret_jwt，none）',
+  `authorization_grant_types` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '授权类型（authorization_code,client_credentials,refresh_token,password）',
+  `redirect_uris` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '重定向 URI',
+  `scopes` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'SCOPE',
+  `require_authorization_consent` tinyint(0) NOT NULL DEFAULT 1 COMMENT '是否要求授权许可（1:=是；0:=否）',
+  `access_token_time_to_live` int(0) NOT NULL COMMENT '访问令牌有效期（单位：s）',
+  `access_token_format` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '访问令牌格式（self-contained, reference）',
+  `refresh_token_time_to_live` int(0) NULL DEFAULT NULL COMMENT '刷新令牌有效期（单位：s）',
+  `deleted` tinyint(0) UNSIGNED NULL DEFAULT 0 COMMENT '是否删除（0:=未删除;null:=已删除）',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of sys_registered_client
+-- ----------------------------
+INSERT INTO `sys_registered_client` VALUES (1, '2022-11-14 14:14:17', NULL, 'admin', NULL, 'admin', '{bcrypt}$2a$10$GLkoQfOQqaggcXog1LYS5.FgqezeOknNsYusUmaf17RdcDXz.Yec.', NULL, 'pi-cloud', 'client_secret_basic', 'refresh_token,client_credentials,password,authorization_code', 'http://127.0.0.1:8080/authorized', 'server', 1, 14400, 'self-contained', 2592000, 0);
+INSERT INTO `sys_registered_client` VALUES (11, '2022-11-15 22:15:50', '2022-11-16 13:50:23', NULL, 'admin', 'pi', '{bcrypt}$2a$10$4VkSp8UyrAYTeyn9gIbqLOpySOQrfamKVmsXuxwwFrLTXyIe6lS5K', NULL, 'pi', 'client_secret_basic', 'client_credentials,password,refresh_token', NULL, 'test', 1, 60, 'self-contained', 120, 0);
+INSERT INTO `sys_registered_client` VALUES (15, '2022-11-15 22:36:44', '2022-11-15 22:37:54', 'admin', 'admin', 'test', '{bcrypt}$2a$10$qoDfG6forEmRkhtaCWAR5e993Wb9v9ILdLZ9.S4/XpE5jy9kpIgOq', NULL, 'test', 'client_secret_basic', 'authorization_code', NULL, 'test', 1, 14400, 'self-contained', 2592000, NULL);
+INSERT INTO `sys_registered_client` VALUES (16, '2022-11-16 14:08:04', '2022-11-16 14:08:27', 'admin', 'admin', 'test', '{bcrypt}$2a$10$3L5qaC6NWw2fMXeJWOcQSOW8veWf1sN0DlrqPK7ON..GJ8OeOu17G', NULL, 'test', 'client_secret_basic', '', NULL, 'test', 1, 14400, 'self-contained', 2592000, NULL);
+INSERT INTO `sys_registered_client` VALUES (17, '2022-11-16 14:08:17', '2022-11-16 14:08:27', 'admin', 'admin', 'test2', '{bcrypt}$2a$10$FCZJhIhiQ7e7ZR6FLtO0De779DCnHeze4YVHllE8wGzTTvQm878li', NULL, 'test2', 'client_secret_basic', '', NULL, 'test', 1, 14400, 'self-contained', 2592000, NULL);
+INSERT INTO `sys_registered_client` VALUES (18, '2022-11-16 14:13:21', '2022-11-16 14:13:25', 'admin', 'admin', 'test', '{bcrypt}$2a$10$5oGZiSOsCyjuTu3f5U7yf.KwAK4MAYzJkkl5s32/11eQ9rmm9p3xi', NULL, 'test', 'client_secret_basic', 'client_credentials', NULL, 'test', 1, 14400, 'self-contained', 2592000, NULL);
 
 -- ----------------------------
 -- Table structure for sys_role
@@ -207,7 +192,7 @@ CREATE TABLE `sys_role_menu`  (
   `menu_id` bigint(0) NOT NULL COMMENT '菜单 ID',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `uk_role_id_menu_id`(`role_id`, `menu_id`) USING BTREE COMMENT '角色 ID, 菜单 ID 唯一索引'
-) ENGINE = InnoDB AUTO_INCREMENT = 25 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 28 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_role_menu
@@ -218,8 +203,9 @@ INSERT INTO `sys_role_menu` VALUES (24, 1, 3);
 INSERT INTO `sys_role_menu` VALUES (4, 1, 4);
 INSERT INTO `sys_role_menu` VALUES (5, 1, 5);
 INSERT INTO `sys_role_menu` VALUES (22, 1, 14);
-INSERT INTO `sys_role_menu` VALUES (21, 1, 15);
-INSERT INTO `sys_role_menu` VALUES (20, 1, 16);
+INSERT INTO `sys_role_menu` VALUES (27, 1, 15);
+INSERT INTO `sys_role_menu` VALUES (26, 1, 16);
+INSERT INTO `sys_role_menu` VALUES (25, 1, 17);
 INSERT INTO `sys_role_menu` VALUES (13, 2, 1);
 INSERT INTO `sys_role_menu` VALUES (17, 2, 2);
 INSERT INTO `sys_role_menu` VALUES (16, 2, 4);
