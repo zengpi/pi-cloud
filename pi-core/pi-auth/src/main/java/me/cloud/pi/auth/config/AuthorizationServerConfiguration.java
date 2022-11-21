@@ -37,7 +37,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.authorization.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
-import org.springframework.security.oauth2.server.authorization.client.JdbcRegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.config.ProviderSettings;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenGenerator;
@@ -73,7 +72,8 @@ public class AuthorizationServerConfiguration {
      */
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
-    public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http)
+    public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http,
+                                                                      PiAuthenticationSuccessHandler piAuthenticationSuccessHandler)
             throws Exception {
         OAuth2AuthorizationServerConfigurer<HttpSecurity> authorizationServerConfigurer =
                 new OAuth2AuthorizationServerConfigurer<>();
@@ -83,7 +83,7 @@ public class AuthorizationServerConfiguration {
                 .tokenEndpoint(tokenEndpoint ->
                         tokenEndpoint
                             .accessTokenRequestConverter(authenticationConverter())
-                            .accessTokenResponseHandler(new PiAuthenticationSuccessHandler())
+                            .accessTokenResponseHandler(piAuthenticationSuccessHandler)
                             .errorResponseHandler(new PiAuthenticationFailureHandler())
                 )
                 .clientAuthentication(clientAuthentication ->

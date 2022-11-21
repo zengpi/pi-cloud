@@ -18,7 +18,7 @@ package me.cloud.pi.admin.pojo.query;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import me.cloud.pi.common.web.pojo.query.BaseQueryParam;
+import me.cloud.pi.common.mybatis.base.BaseQueryParam;
 
 import javax.validation.constraints.NotNull;
 

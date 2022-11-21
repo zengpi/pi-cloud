@@ -36,7 +36,7 @@ import me.cloud.pi.admin.pojo.vo.UserInfoVO;
 import me.cloud.pi.admin.pojo.vo.UserVO;
 import me.cloud.pi.admin.service.UserService;
 import me.cloud.pi.common.mybatis.util.PiPage;
-import me.cloud.pi.common.web.pojo.query.BaseQueryParam;
+import me.cloud.pi.common.mybatis.base.BaseQueryParam;
 import me.cloud.pi.common.web.util.ResponseData;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -59,11 +59,6 @@ import javax.validation.Valid;
 public class UserController {
     private final UserService userService;
 
-    /**
-     * 用户查询
-     *
-     * @return /
-     */
     @GetMapping
     @PreAuthorize("hasAuthority('sys_user_query')")
     @Operation(summary = "用户查询")
@@ -71,12 +66,6 @@ public class UserController {
         return ResponseData.ok(userService.getUsers(userQuery));
     }
 
-    /**
-     * 新增用户
-     *
-     * @param form /
-     * @return /
-     */
     @PostMapping
     @PreAuthorize("hasAuthority('sys_user_add')")
     @Operation(summary = "新增用户")
@@ -85,12 +74,6 @@ public class UserController {
         return ResponseData.ok();
     }
 
-    /**
-     * 编辑用户
-     *
-     * @param userEditForm /
-     * @return /
-     */
     @PutMapping
     @PreAuthorize("hasAuthority('sys_user_edit')")
     @Operation(summary = "编辑用户")
@@ -99,12 +82,6 @@ public class UserController {
         return ResponseData.ok();
     }
 
-    /**
-     * 删除
-     *
-     * @param ids 用户 ID，多个以逗号分隔
-     * @return /
-     */
     @PreAuthorize("hasAuthority('sys_user_delete')")
     @DeleteMapping("/{ids}")
     @Operation(summary = "删除")
@@ -113,12 +90,6 @@ public class UserController {
         return ResponseData.ok();
     }
 
-    /**
-     * 导出用户列表
-     *
-     * @param query    用户查询参数
-     * @param response 响应
-     */
     @GetMapping("/export")
     @SneakyThrows
     @Operation(summary = "导出用户列表")
@@ -126,9 +97,6 @@ public class UserController {
         userService.export(query, response);
     }
 
-    /**
-     * 用户导入模板
-     */
     @GetMapping("/userImportTemp")
     @SneakyThrows
     @Operation(summary = "用户导入模板")
@@ -136,33 +104,18 @@ public class UserController {
         userService.downloadUserImportTemp(response);
     }
 
-    /**
-     * 导入用户
-     *
-     * @return /
-     */
     @PostMapping("/import")
     @Operation(summary = "导入用户")
     public ResponseData<?> importUser(UserImportDTO dto) {
         return ResponseData.ok(userService.importUser(dto));
     }
 
-    /**
-     * 获取用户信息
-     *
-     * @return 用户信息
-     */
     @GetMapping("/info")
     @Operation(summary = "获取用户信息")
     public ResponseData<UserInfoVO> info() {
         return ResponseData.ok(userService.getUserInfo());
     }
 
-    /**
-     * 修改个人信息
-     *
-     * @return /
-     */
     @PutMapping("/profileEdit")
     @Operation(summary = "修改个人信息")
     public ResponseData<?> editPersonalInfo(@RequestBody UserEditDTO userEditDTO) {
@@ -170,12 +123,6 @@ public class UserController {
         return ResponseData.ok();
     }
 
-    /**
-     * 密码重置
-     *
-     * @param id 待重置密码的用户 ID
-     * @return /
-     */
     @GetMapping("/passReset")
     @Operation(summary = "密码重置")
     public ResponseData<?> resetPass(Long id) {
@@ -183,22 +130,12 @@ public class UserController {
         return ResponseData.ok();
     }
 
-    /**
-     * 可选用户。如：为角色指定用户时，需要先查询出可以选择的用户列表，然后选择用户
-     *
-     * @param query 查询条件
-     * @return 可选用户列表
-     */
     @GetMapping("/optionalUsers")
     @Operation(summary = "可选用户。如：为角色指定用户时，需要先查询出可以选择的用户列表，然后选择用户")
     public ResponseData<PiPage<OptionalUserVO>> getOptionalUsers(BaseQueryParam query) {
         return ResponseData.ok(userService.getOptionalUsers(query));
     }
 
-    /**
-     * 上传头像
-     * @param file 图片
-     */
     @SneakyThrows
     @PostMapping("/uploadAvatar")
     @Operation(summary = "上传头像")

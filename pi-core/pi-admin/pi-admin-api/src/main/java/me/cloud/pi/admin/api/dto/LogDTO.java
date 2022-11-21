@@ -14,30 +14,46 @@
  * limitations under the License.
  */
 
-package me.cloud.pi.common.web.pojo.query;
+package me.cloud.pi.admin.api.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 /**
  * @author ZnPi
- * @date 2022-08-29
+ * @date 2022-11-18
  */
-@Getter
-@Setter
-public class BaseQueryParam {
+@Data
+public class LogDTO {
     /**
-     * 页码
+     * 类型(0:=异常;1:=正常)
      */
-    private Integer pageNum = 1;
-
+    private Integer type;
     /**
-     * 每页记录数
+     * IP地址
      */
-    private Integer pageSize = 20;
-
+    private String ip;
     /**
-     * 关键词
+     * 标题
      */
-    private String keyWord;
+    private String title;
+    /**
+     * 异常描述
+     */
+    private String exceptionDesc;
+    /**
+     * 请求方式
+     */
+    private String requestMethod;
+    /**
+     * 请求参数
+     */
+    private String requestParam;
+    /**
+     * 请求时间
+     */
+    private Long requestTime;
+    /**
+     * 方法名称
+     */
+    private String methodName;
 }

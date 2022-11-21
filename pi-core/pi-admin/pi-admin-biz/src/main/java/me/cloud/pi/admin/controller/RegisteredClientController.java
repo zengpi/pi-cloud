@@ -22,12 +22,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import me.cloud.pi.admin.pojo.dto.RegisteredClientDTO;
 import me.cloud.pi.admin.service.RegisteredClientService;
-import me.cloud.pi.common.web.pojo.query.BaseQueryParam;
+import me.cloud.pi.common.mybatis.base.BaseQueryParam;
 import me.cloud.pi.common.web.util.ResponseData;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
-
-import javax.xml.ws.Response;
 
 /**
  * @author ZnPi

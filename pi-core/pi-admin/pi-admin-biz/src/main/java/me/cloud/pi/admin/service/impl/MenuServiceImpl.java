@@ -29,9 +29,11 @@ import me.cloud.pi.admin.converter.MenuConverter;
 import me.cloud.pi.admin.mapper.MenuMapper;
 import me.cloud.pi.admin.pojo.dto.MenuDTO;
 import me.cloud.pi.admin.pojo.po.SysMenu;
+import me.cloud.pi.admin.pojo.po.SysRole;
 import me.cloud.pi.admin.pojo.query.MenuQueryParam;
 import me.cloud.pi.admin.pojo.vo.MenuVO;
 import me.cloud.pi.admin.service.MenuService;
+import me.cloud.pi.admin.service.RoleService;
 import me.cloud.pi.common.redis.constant.CacheConstants;
 import me.cloud.pi.common.security.util.SecurityUtils;
 import me.cloud.pi.common.web.constant.PiConstants;
@@ -58,6 +60,8 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, SysMenu> implements
     private final MenuMapper menuMapper;
     private final MenuConverter menuConverter;
 
+    public final RoleService roleService;
+
     @Resource
     @Lazy
     private MenuService menuService;
@@ -73,17 +77,16 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, SysMenu> implements
     }
 
     @Override
-    @Cacheable(value = CacheConstants.CACHE_MENU, key = "#username")
+    @Cacheable(value = CacheConstants.CACHE_MENU, key = "#p0")
     public List<Tree<Long>> buildMenu(String username) {
-        ArrayList<String> roleCodeList = (ArrayList<String>) SecurityUtils.getRoleCodeList();
-        if (roleCodeList.size() == 0) {
-            return Collections.emptyList();
-        }
+        // 角色标识
+        List<SysRole> sysRoleList = roleService.listRoleByUserName(username);
+        List<String> roleCodes = sysRoleList.stream().map(SysRole::getRoleCode).collect(Collectors.toList());
+
         // 根据角色编码列表获取菜单
-        Set<SysMenu> menuSet = new HashSet<>(menuMapper.listMenuByRoleCodeList(roleCodeList));
+        Set<SysMenu> menuSet = new HashSet<>(menuMapper.listMenuByRoleCodeList(roleCodes));
         List<TreeNode<Long>> treeNodes = menuSet.stream()
                 .filter(menu -> !MenuTypeEnum.BUTTON.getType().equals(menu.getType()))
-                .filter(menu -> StrUtil.isNotBlank(menu.getPath()))
                 .map(genTreeNode()).collect(Collectors.toList());
         return TreeUtil.build(treeNodes, PiConstants.MENU_TREE_ROOT_ID);
     }
@@ -143,8 +146,8 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, SysMenu> implements
         if (dto.getParentId().equals(dto.getId())) {
             throw new BadRequestException("上级类目不能为自己！");
         }
-        if (dto.getType() == 1) {
-            dto.setComponentName("Navigation");
+        if (dto.getType().equals(MenuTypeEnum.DIR.getType()) && dto.getExternalLinks() != 1) {
+            dto.setComponent("Navigation");
         }
         SysMenu menu = menuConverter.menuDtoToMenuPo(dto);
         super.saveOrUpdate(menu);

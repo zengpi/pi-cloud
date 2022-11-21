@@ -16,10 +16,16 @@
 
 package me.cloud.pi.auth.extension;
 
+import lombok.NonNull;
 import lombok.SneakyThrows;
+import me.cloud.pi.admin.api.dto.LogDTO;
 import me.cloud.pi.auth.constant.SecurityConstants;
+import me.cloud.pi.common.logging.event.LogEvent;
+import me.cloud.pi.common.logging.util.LogUtils;
 import me.cloud.pi.common.web.util.HttpEndpointUtils;
 import me.cloud.pi.common.web.util.ResponseData;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.server.ServletServerHttpResponse;
 import org.springframework.security.core.Authentication;
@@ -29,6 +35,7 @@ import org.springframework.security.oauth2.core.endpoint.DefaultOAuth2AccessToke
 import org.springframework.security.oauth2.core.endpoint.OAuth2AccessTokenResponse;
 import org.springframework.security.oauth2.server.authorization.authentication.OAuth2AccessTokenAuthenticationToken;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -40,7 +47,8 @@ import java.util.Map;
  * @author ZnPi
  * @date 2022-10-21
  */
-public class PiAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
+@Component
+public class PiAuthenticationSuccessHandler implements AuthenticationSuccessHandler, ApplicationEventPublisherAware {
     /**
      * 指定响应数据不使用 ResponseData 封装的参数名称
      * Swagger 登录时可用
@@ -49,6 +57,8 @@ public class PiAuthenticationSuccessHandler implements AuthenticationSuccessHand
 
     private final Converter<OAuth2AccessTokenResponse, Map<String, Object>> accessTokenResponseParametersConverter =
             new DefaultOAuth2AccessTokenResponseMapConverter();
+
+    private ApplicationEventPublisher publisher;
 
     @SneakyThrows
     @Override
@@ -74,12 +84,21 @@ public class PiAuthenticationSuccessHandler implements AuthenticationSuccessHand
         Map<String, Object> tokenResponseParameters = this.accessTokenResponseParametersConverter.convert(accessTokenResponse);
         ServletServerHttpResponse httpResponse = new ServletServerHttpResponse(response);
 
+        LogDTO logDTO = LogUtils.getDefaultLogDTO();
+        logDTO.setTitle("用户登录");
+        publisher.publishEvent(new LogEvent(logDTO, SecurityConstants.TOKEN_PREFIX + accessToken.getTokenValue()));
+
         boolean noResponseData = Boolean.parseBoolean(request.getParameter(NO_RESPONSE_DATA_PARAM_NAME));
-        if(noResponseData){
+        if (noResponseData) {
             HttpEndpointUtils.writeWithMessageConverters(tokenResponseParameters, httpResponse);
-        }else{
+        } else {
             ResponseData<Map<String, Object>> responseData = ResponseData.ok(tokenResponseParameters);
             HttpEndpointUtils.writeWithMessageConverters(responseData, httpResponse);
         }
+    }
+
+    @Override
+    public void setApplicationEventPublisher(@NonNull ApplicationEventPublisher applicationEventPublisher) {
+        this.publisher = applicationEventPublisher;
     }
 }

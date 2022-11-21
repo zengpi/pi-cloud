@@ -18,7 +18,7 @@ package me.cloud.pi.admin.pojo.query;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.cloud.pi.common.web.pojo.query.BaseQueryParam;
+import me.cloud.pi.common.mybatis.base.BaseQueryParam;
 
 /**
  * @author ZnPi

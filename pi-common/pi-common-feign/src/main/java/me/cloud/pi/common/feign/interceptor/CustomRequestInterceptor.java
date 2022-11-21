@@ -16,8 +16,11 @@
 
 package me.cloud.pi.common.feign.interceptor;
 
+import cn.hutool.core.util.StrUtil;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
+import me.cloud.pi.common.feign.util.AccessTokenHolder;
+import org.springframework.http.HttpHeaders;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -29,14 +32,22 @@ import org.springframework.web.context.request.ServletRequestAttributes;
  * @date 2022-08-15
  */
 public class CustomRequestInterceptor implements RequestInterceptor {
-    private static final String HEADER = "Authorization";
     @Override
     public void apply(RequestTemplate template) {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        if(attributes != null){
-            String authorization = attributes.getRequest().getHeader(HEADER);
-            if(StringUtils.hasText(authorization)){
-                template.header(HEADER, authorization);
+        if (attributes != null) {
+            String authorization = attributes.getRequest().getHeader(HttpHeaders.AUTHORIZATION);
+            if (StringUtils.hasText(authorization)) {
+                template.header(HttpHeaders.AUTHORIZATION, authorization);
+            }
+        } else {
+            try {
+                if (StrUtil.isNotBlank(AccessTokenHolder.getToken())) {
+                    template.header(HttpHeaders.AUTHORIZATION, AccessTokenHolder.getToken());
+                }
+            } catch (Exception e) {
+                AccessTokenHolder.remove();
+                throw new RuntimeException(e);
             }
         }
     }

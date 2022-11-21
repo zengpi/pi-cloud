@@ -21,7 +21,7 @@ import me.cloud.pi.admin.pojo.dto.RegisteredClientDTO;
 import me.cloud.pi.admin.pojo.po.SysRegisteredClient;
 import me.cloud.pi.admin.pojo.vo.RegisteredClientVO;
 import me.cloud.pi.common.mybatis.util.PiPage;
-import me.cloud.pi.common.web.pojo.query.BaseQueryParam;
+import me.cloud.pi.common.mybatis.base.BaseQueryParam;
 
 /**
  * @author ZnPi

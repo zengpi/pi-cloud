@@ -27,7 +27,7 @@ import me.cloud.pi.admin.pojo.vo.OptionalUserVO;
 import me.cloud.pi.admin.pojo.vo.UserInfoVO;
 import me.cloud.pi.admin.pojo.vo.UserVO;
 import me.cloud.pi.common.mybatis.util.PiPage;
-import me.cloud.pi.common.web.pojo.query.BaseQueryParam;
+import me.cloud.pi.common.mybatis.base.BaseQueryParam;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
