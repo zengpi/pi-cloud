@@ -25,7 +25,7 @@ import me.cloud.pi.admin.pojo.vo.OptionalUserVO;
 import me.cloud.pi.admin.pojo.vo.UserExportVO;
 import me.cloud.pi.admin.pojo.vo.UserVO;
 import me.cloud.pi.common.mybatis.util.PiPage;
-import me.cloud.pi.common.web.pojo.query.BaseQueryParam;
+import me.cloud.pi.common.mybatis.base.BaseQueryParam;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

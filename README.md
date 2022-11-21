@@ -149,6 +149,6 @@ pi:
 ```tex
 pi-core/pi-admin/pi-admin-boot/**/AdminApp.java
 pi-core/pi-auth/**/AuthApp.java
-pi-core/pi-gateway/**/Gateway.java
+pi-core/pi-gateway/**/GatewayApp.java
 ```
 

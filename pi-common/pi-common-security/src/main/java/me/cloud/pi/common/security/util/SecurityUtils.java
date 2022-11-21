@@ -55,11 +55,7 @@ public class SecurityUtils {
      * @return 用户名
      */
     public static String getUserName() {
-        Jwt jwt = getJwt();
-        if (jwt == null) {
-            return null;
-        }
-        return jwt.getClaimAsString("username");
+        return getAuthentication().getName();
     }
 
     /**

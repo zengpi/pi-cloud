@@ -29,10 +29,9 @@ import me.cloud.pi.admin.service.RegisteredClientService;
 import me.cloud.pi.common.mybatis.util.PiPage;
 import me.cloud.pi.common.security.constant.SecurityConstants;
 import me.cloud.pi.common.web.exception.BadRequestException;
-import me.cloud.pi.common.web.pojo.query.BaseQueryParam;
+import me.cloud.pi.common.mybatis.base.BaseQueryParam;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
-import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;

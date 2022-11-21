@@ -112,7 +112,17 @@
 
 			<dependency>
 				<groupId>me.cloud.pi</groupId>
+				<artifactId>pi-admin-api</artifactId>
+				<version>${pi.cloud-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>me.cloud.pi</groupId>
 				<artifactId>pi-common-feign</artifactId>
+				<version>${pi.cloud-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>me.cloud.pi</groupId>
+				<artifactId>pi-common-logging</artifactId>
 				<version>${pi.cloud-version}</version>
 			</dependency>
 			<dependency>

@@ -28,6 +28,11 @@
 
         <dependency>
             <groupId>me.cloud.pi</groupId>
+            <artifactId>pi-common-swagger</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.cloud.pi</groupId>
             <artifactId>pi-common-security</artifactId>
             <scope>provided</scope>
         </dependency>

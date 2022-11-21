@@ -25,6 +25,17 @@
              sys_user_role sur on sr.id = sur.role_id
         WHERE sur.user_id = #{id}
     </select>
+
+    <select id="listRoleByUsername" resultType="me.cloud.pi.admin.pojo.po.SysRole">
+        SELECT sr.id,
+               sr.role_code
+        FROM sys_role sr
+                 INNER JOIN
+             sys_user_role sur on sr.id = sur.role_id
+                 LEFT JOIN sys_user su on sur.user_id = su.id
+        WHERE su.username = #{username}
+    </select>
+
     <select id="getRoleMembers" resultType="me.cloud.pi.admin.pojo.vo.RoleMemberVO">
         SELECT
             ur.id, u.username, u.nickname, d.name dept_name

@@ -41,6 +41,14 @@ public interface RoleMapper extends BaseMapper<SysRole> {
     List<SysRole> listRoleByUserId(@Param("id") Long id);
 
     /**
+     * 根据用户名获取该用户的角色
+     *
+     * @param username 用户名
+     * @return 该用户的角色
+     */
+    List<SysRole> listRoleByUsername(@Param("username") String username);
+
+    /**
      * 获取角色成员
      *
      * @param page       分页
