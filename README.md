@@ -12,9 +12,10 @@ pi-cloud 是基于 Spring Cloud 2021 & Spring Cloud Alibaba 2021、Spring Boot 2
 
 ## 预览
 
-| ![image-20221104164240613.png](https://gitee.com/linjiabin100/pi-cloud-resource/raw/master/imgs/image-20221104164240613.png) | ![image-20221104164357964](https://gitee.com/linjiabin100/pi-cloud-resource/raw/master/imgs/image-20221104164357964.png) |
+| ![image-20221104164240613.png](https://gitee.com/linjiabin100/pi-cloud-resource/raw/master/imgs/image-20221104164240613.png) | ![image-20221104164357964](https://gitee.com/linjiabin100/pi-cloud-resource/raw/master/imgs/Snipaste_2022-11-22_11-18-12.png) |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| ![image-20221104164416152](https://gitee.com/linjiabin100/pi-cloud-resource/raw/master/imgs/image-20221104164416152.png) | ![image-20221104164428444](https://gitee.com/linjiabin100/pi-cloud-resource/raw/master/imgs/image-20221104164428444.png) |
+| ![image-20221104164416152](https://gitee.com/linjiabin100/pi-cloud-resource/raw/master/imgs/Snipaste_2022-11-22_11-18-34.png) | ![image-20221104164428444](https://gitee.com/linjiabin100/pi-cloud-resource/raw/master/imgs/Snipaste_2022-11-22_11-18-52.png) |
+| ![Snipaste_2022-11-22_11-19-14](https://gitee.com/linjiabin100/pi-cloud-resource/raw/master/imgs/Snipaste_2022-11-22_11-19-14.png) | ![Snipaste_2022-11-22_11-12-16](https://gitee.com/linjiabin100/pi-cloud-resource/raw/master/imgs/Snipaste_2022-11-22_11-12-16.png) |
 
 ## 源码
 
@@ -35,17 +36,34 @@ pi-cloud 是基于 Spring Cloud 2021 & Spring Cloud Alibaba 2021、Spring Boot 2
 - pi-cloud
 	- pi-common					公共模块
 		- pi-common-feign		OpenFeign
+		- pi-common-logging		日志
 		- pi-common-mybatis		MyBatis
 		- pi-common-redis		Redis
-		- pi-common-util		工具
 		- pi-common-security	资源服务器
+		- pi-common-swagger		OpenAPI 文档
+		- pi-common-util		工具
 		- pi-common-web			Web
 	- pi-core					系统核心模块
 		- pi-auth 				授权服务【8007】
 		- pi-admin 				管理服务【8017】
 			- pi-admin-api		服务调用公共 API 模块
 			- pi-admin-biz		业务处理模块
+		- pi-monitor			监控模块【8027】
 		- pi-gateway 			网关服务【9731】
+```
+
+## 项目功能模块
+
+```
+- 系统管理
+	- 用户管理
+	- 菜单管理
+	- 角色管理
+	- 客户端管理
+- 系统监控
+	- 接口文档
+	- 操作日志
+	- 服务监控
 ```
 
 ## 快速开始
@@ -139,8 +157,6 @@ pi:
 ### 导入数据库
 
 使用你喜欢的方式连接到 MySQL 数据库中，新建一个数据库，它的名称是 `pi`，并将项目目录下的 `resources/pi-cloud_xxx.sql` 导入到新建的数据库中。
-
-同样，数据库脚本文件可以在 [资源](https://gitee.com/linjiabin100/pi-cloud-resource.git) 仓库中找到。
 
 ### 启动项目
 

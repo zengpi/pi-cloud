@@ -45,7 +45,7 @@ public class ResourceServerConfiguration {
     public SecurityFilterChain filterChain() throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .antMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+                        .antMatchers("/actuator/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
@@ -67,12 +67,12 @@ public class ResourceServerConfiguration {
     }
 
     @Bean
-    public PiAuthenticationEntryPoint piAuthenticationEntryPoint(){
+    public PiAuthenticationEntryPoint piAuthenticationEntryPoint() {
         return new PiAuthenticationEntryPoint();
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 }

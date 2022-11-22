@@ -1,13 +1,9 @@
-pi:
-  # 数据库名称
-  db-name: pi
-
 server:
-  port: 8017
+  port: 8027
 
 spring:
   application:
-    name: pi-admin
+    name: pi-monitor
   cloud:
     nacos:
       server-addr: pi-nacos:8848
@@ -16,5 +12,3 @@ spring:
         extension-configs:
           - data-id: pi-common.yaml
             refresh: true
-          - dataId: pi-mybatis.yaml
-          - dataId: pi-redis.yaml

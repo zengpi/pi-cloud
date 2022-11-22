@@ -15,5 +15,6 @@
         <module>pi-auth</module>
         <module>pi-admin</module>
         <module>pi-gateway</module>
+        <module>pi-monitor</module>
     </modules>
 </project>
