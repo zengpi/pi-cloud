@@ -16,5 +16,6 @@
         <module>pi-admin</module>
         <module>pi-gateway</module>
         <module>pi-monitor</module>
+        <module>pi-job</module>
     </modules>
 </project>

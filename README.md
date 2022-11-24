@@ -8,6 +8,7 @@ pi-cloud 是基于 Spring Cloud 2021 & Spring Cloud Alibaba 2021、Spring Boot 2
 
 - 基于 Spring Cloud 2021 & Spring Cloud Alibaba 2021 提供微服务开发的一站式解决方案。
 - 基于 Spring Authorization Server 0.3.1、OAuth 2.0 Resource Server、JWT 的统一认证鉴权。
+- 整合 XXL-JOB 任务调度平台，开箱即用。
 - 只保留核心功能，无过度自定义封装，易于学习和功能扩展。
 
 ## 预览
@@ -36,6 +37,7 @@ pi-cloud 是基于 Spring Cloud 2021 & Spring Cloud Alibaba 2021、Spring Boot 2
 - pi-cloud
 	- pi-common					公共模块
 		- pi-common-feign		OpenFeign
+		- pi-common-job			xxl-job 执行器配置
 		- pi-common-logging		日志
 		- pi-common-mybatis		MyBatis
 		- pi-common-redis		Redis
@@ -44,12 +46,13 @@ pi-cloud 是基于 Spring Cloud 2021 & Spring Cloud Alibaba 2021、Spring Boot 2
 		- pi-common-util		工具
 		- pi-common-web			Web
 	- pi-core					系统核心模块
-		- pi-auth 				授权服务【8007】
-		- pi-admin 				管理服务【8017】
+		- pi-auth				授权服务【8007】
+		- pi-admin				管理服务
 			- pi-admin-api		服务调用公共 API 模块
-			- pi-admin-biz		业务处理模块
+			- pi-admin-biz		业务处理模块【8017】
 		- pi-monitor			监控模块【8027】
-		- pi-gateway 			网关服务【9731】
+		- pi-job				xxl-job 调度中心【8037】
+		- pi-gateway			网关服务【9731】
 ```
 
 ## 项目功能模块
@@ -60,6 +63,7 @@ pi-cloud 是基于 Spring Cloud 2021 & Spring Cloud Alibaba 2021、Spring Boot 2
 	- 菜单管理
 	- 角色管理
 	- 客户端管理
+	- 任务调度
 - 系统监控
 	- 接口文档
 	- 操作日志
@@ -156,7 +160,7 @@ pi:
 
 ### 导入数据库
 
-使用你喜欢的方式连接到 MySQL 数据库中，新建一个数据库，它的名称是 `pi`，并将项目目录下的 `resources/pi-cloud_xxx.sql` 导入到新建的数据库中。
+使用你喜欢的方式连接到 MySQL 数据库中，新建一个数据库，它的名称是 `pi`，并将项目目录下的 `doc/pi-cloud_xxx.sql` 导入到新建的数据库中。
 
 ### 启动项目
 

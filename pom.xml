@@ -34,6 +34,7 @@
 		<mapstruct.version>1.5.2.Final</mapstruct.version>
 		<springdoc.version>1.6.12</springdoc.version>
 		<spring-boot-admin.version>2.5.1</spring-boot-admin.version>
+		<xxl-job-core.version>2.3.1</xxl-job-core.version>
 
 		<lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
 
@@ -115,6 +116,11 @@
 				<artifactId>spring-boot-admin-starter-server</artifactId>
 				<version>${spring-boot-admin.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>com.xuxueli</groupId>
+				<artifactId>xxl-job-core</artifactId>
+				<version>${xxl-job-core.version}</version>
+			</dependency>
 
 			<dependency>
 				<groupId>me.cloud.pi</groupId>
@@ -124,6 +130,11 @@
 			<dependency>
 				<groupId>me.cloud.pi</groupId>
 				<artifactId>pi-common-feign</artifactId>
+				<version>${pi.cloud-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>me.cloud.pi</groupId>
+				<artifactId>pi-common-job</artifactId>
 				<version>${pi.cloud-version}</version>
 			</dependency>
 			<dependency>

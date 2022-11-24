@@ -16,6 +16,8 @@
 
 package me.cloud.pi.common.logging.annotation;
 
+import org.springframework.core.annotation.AliasFor;
+
 import java.lang.annotation.*;
 
 /**
@@ -25,5 +27,17 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface Log {
+    /**
+     * 日志标题
+     * @return /
+     */
+    @AliasFor("title")
     String value();
+
+    /**
+     * 日志标题
+     * @return /
+     */
+    @AliasFor("value")
+    String title();
 }

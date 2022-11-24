@@ -11,7 +11,7 @@
  Target Server Version : 80030
  File Encoding         : 65001
 
- Date: 21/11/2022 19:52:25
+ Date: 24/11/2022 17:02:29
 */
 
 SET NAMES utf8mb4;
@@ -61,7 +61,7 @@ CREATE TABLE `sys_log`  (
   `request_time` bigint(0) NULL DEFAULT NULL COMMENT '请求耗时',
   `method_name` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '方法名称',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 15 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_log
@@ -70,6 +70,13 @@ INSERT INTO `sys_log` VALUES (4, '2022-11-20 21:30:05', NULL, 'admin', NULL, 1, 
 INSERT INTO `sys_log` VALUES (5, '2022-11-20 22:22:40', NULL, 'admin', NULL, 1, '127.0.0.1', '用户登录', NULL, 'POST', NULL, NULL, NULL);
 INSERT INTO `sys_log` VALUES (6, '2022-11-21 08:12:21', NULL, 'admin', NULL, 1, '127.0.0.1', '用户登录', NULL, 'POST', NULL, NULL, NULL);
 INSERT INTO `sys_log` VALUES (7, '2022-11-21 18:51:02', NULL, 'admin', NULL, 1, '127.0.0.1', '用户登录', NULL, 'POST', NULL, NULL, NULL);
+INSERT INTO `sys_log` VALUES (8, '2022-11-21 22:53:39', NULL, 'admin', NULL, 1, '127.0.0.1', '用户登录', NULL, 'POST', NULL, NULL, NULL);
+INSERT INTO `sys_log` VALUES (9, '2022-11-22 08:34:42', NULL, 'admin', NULL, 1, '127.0.0.1', '用户登录', NULL, 'POST', NULL, NULL, NULL);
+INSERT INTO `sys_log` VALUES (10, '2022-11-22 14:36:37', NULL, 'admin', NULL, 1, '127.0.0.1', '用户登录', NULL, 'POST', NULL, NULL, NULL);
+INSERT INTO `sys_log` VALUES (11, '2022-11-22 14:59:26', NULL, 'admin', NULL, 1, '127.0.0.1', '用户登录', NULL, 'POST', NULL, NULL, NULL);
+INSERT INTO `sys_log` VALUES (12, '2022-11-23 17:20:15', NULL, 'admin', NULL, 1, '127.0.0.1', '用户登录', NULL, 'POST', NULL, NULL, NULL);
+INSERT INTO `sys_log` VALUES (13, '2022-11-23 17:25:11', NULL, 'admin', NULL, 1, '127.0.0.1', '用户登录', NULL, 'POST', NULL, NULL, NULL);
+INSERT INTO `sys_log` VALUES (14, '2022-11-23 20:28:21', NULL, 'admin', NULL, 1, '127.0.0.1', '用户登录', NULL, 'POST', NULL, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for sys_menu
@@ -96,7 +103,7 @@ CREATE TABLE `sys_menu`  (
   `parent_id` bigint(0) NOT NULL COMMENT '父菜单 ID（-1表示跟菜单）',
   `deleted` tinyint(0) NULL DEFAULT 0 COMMENT '是否删除(0:=未删除; null:=已删除)',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 22 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '菜单表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 24 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '菜单表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_menu
@@ -115,6 +122,8 @@ INSERT INTO `sys_menu` VALUES (18, '2022-11-17 11:50:49', '2022-11-17 13:43:00',
 INSERT INTO `sys_menu` VALUES (19, '2022-11-17 13:43:26', '2022-11-20 16:47:38', 'admin', 'admin', '系统监控', '/monitoring', NULL, 'Navigation', NULL, 'monitor', 2, 1, 1, 0, 1, NULL, -1, 0);
 INSERT INTO `sys_menu` VALUES (20, '2022-11-17 13:46:55', NULL, 'admin', NULL, '接口文档', 'http://localhost:9731/webjars/swagger-ui/index.html', NULL, NULL, NULL, 'swagger', 1, 1, 2, 1, 1, NULL, 19, 0);
 INSERT INTO `sys_menu` VALUES (21, '2022-11-20 16:46:46', '2022-11-20 16:49:41', 'admin', 'admin', '操作日志', 'log', 'Log', 'system/log/Index', NULL, 'log', 2, 1, 2, 0, 1, NULL, 19, 0);
+INSERT INTO `sys_menu` VALUES (22, '2022-11-22 10:58:01', NULL, 'admin', NULL, '服务监控', 'http://pi:8027/applications', NULL, NULL, NULL, 'service-monitor', 3, 1, 2, 1, 1, NULL, 19, 0);
+INSERT INTO `sys_menu` VALUES (23, '2022-11-23 17:23:53', NULL, 'admin', NULL, '任务调度', 'http://pi:8037/xxl-job-admin', NULL, NULL, NULL, 'task', 5, 1, 2, 1, 1, NULL, 1, 0);
 
 -- ----------------------------
 -- Table structure for sys_post
@@ -225,7 +234,7 @@ CREATE TABLE `sys_role_menu`  (
   `menu_id` bigint(0) NOT NULL COMMENT '菜单 ID',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `uk_role_id_menu_id`(`role_id`, `menu_id`) USING BTREE COMMENT '角色 ID, 菜单 ID 唯一索引'
-) ENGINE = InnoDB AUTO_INCREMENT = 33 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 35 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of sys_role_menu
@@ -242,6 +251,8 @@ INSERT INTO `sys_role_menu` VALUES (25, 1, 17);
 INSERT INTO `sys_role_menu` VALUES (31, 1, 19);
 INSERT INTO `sys_role_menu` VALUES (30, 1, 20);
 INSERT INTO `sys_role_menu` VALUES (32, 1, 21);
+INSERT INTO `sys_role_menu` VALUES (33, 1, 22);
+INSERT INTO `sys_role_menu` VALUES (34, 1, 23);
 INSERT INTO `sys_role_menu` VALUES (13, 2, 1);
 INSERT INTO `sys_role_menu` VALUES (17, 2, 2);
 INSERT INTO `sys_role_menu` VALUES (16, 2, 4);
