@@ -29,16 +29,16 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface LogConverter {
     /**
-     * po -> dto
-     * @param dto /
-     * @return /
+     * LogDTO -> SysLog
+     * @param dto LogDTO
+     * @return SysLog
      */
-    SysLog dtoToPo(LogDTO dto);
+    SysLog logDtoToSysLog(LogDTO dto);
 
     /**
-     * pagePO -> pageVO
-     * @param log /
-     * @return /
+     * PiPage<SysLog> -> PiPage<LogVO>
+     * @param log PiPage<SysLog>
+     * @return PiPage<LogVO>
      */
-    PiPage<LogVO> pagePoToPageVo(PiPage<SysLog> log);
+    PiPage<LogVO> pageSysLogToPageLogVo(PiPage<SysLog> log);
 }

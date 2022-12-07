@@ -16,22 +16,16 @@
 
 package me.cloud.pi.admin.pojo.query;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import me.cloud.pi.common.mybatis.base.BaseQueryParam;
-
-import javax.validation.constraints.NotNull;
 
 /**
  * @author ZnPi
- * @date 2022-09-25
+ * @date 2022-11-30 21:44
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class RoleMemberQueryParam extends BaseQueryParam {
-    /**
-     * 角色 ID
-     */
-    @NotNull(message = "角色 ID 不能为空")
-    private Long roleId;
+@Schema(title = "获取部门（树形）查询参数")
+public class DeptTreeQuery {
+    @Schema(description = "关键字")
+    private String keyWord;
 }

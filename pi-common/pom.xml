@@ -21,5 +21,6 @@
         <module>pi-common-swagger</module>
         <module>pi-common-logging</module>
         <module>pi-common-job</module>
+        <module>pi-common-file</module>
     </modules>
 </project>

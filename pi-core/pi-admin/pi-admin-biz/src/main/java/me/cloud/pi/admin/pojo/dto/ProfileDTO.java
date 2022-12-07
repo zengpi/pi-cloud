@@ -14,35 +14,32 @@
  * limitations under the License.
  */
 
-package me.cloud.pi.common.mybatis.base;
+package me.cloud.pi.admin.pojo.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 /**
+ * 用户修改基本信息
  * @author ZnPi
- * @date 2022-08-29
+ * @date 2022-08-27
  */
-@Getter
-@Setter
-@Schema(description = "基础查询参数")
-public class BaseQueryParam {
-    /**
-     * 页码
-     */
-    @Schema(description = "页码")
-    private Integer pageNum = 1;
+@Schema(name = "用户个人信息 DTO")
+@Data
+public class ProfileDTO {
 
-    /**
-     * 每页记录数
-     */
-    @Schema(description = "每页记录数")
-    private Integer pageSize = 20;
+    @Schema(description = "标识")
+    private Long id;
 
-    /**
-     * 关键词
-     */
-    @Schema(description = "关键词")
-    private String keyWord;
+    @Schema(description = "新密码，如果此字段不为空，oldPassword 字段也不允许为空")
+    private String password;
+
+    @Schema(description = "旧密码")
+    private String oldPassword;
+
+    @Schema(description = "昵称")
+    private String nickname;
+
+    @Schema(description = "手机")
+    private String phone;
 }

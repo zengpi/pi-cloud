@@ -16,6 +16,7 @@
 
 package me.cloud.pi.admin.pojo.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,34 +27,28 @@ import java.util.List;
  * @author ZnPi
  * @date 2022-09-15
  */
+@Schema(name = "用户导入 DTO")
 @Data
 public class UserImportDTO {
-    /**
-     * 部门 ID
-     */
+    @Schema(description = "部门 ID")
     private Long deptId;
-    /**
-     * 角色 ID 列表
-     */
+
+    @Schema(description = "角色 ID 列表")
     private List<Long> roleIds;
-    /**
-     * 文件
-     */
+
+    @Schema(description = "文件")
     private MultipartFile file;
 
+    @Schema(name = "文件列")
     @Data
     public static class FileItem{
-        /**
-         * 用户名
-         */
+        @Schema(description = "用户名")
         private String username;
-        /**
-         * 昵称
-         */
+
+        @Schema(description = "昵称")
         private String nickname;
-        /**
-         * 手机
-         */
+
+        @Schema(description = "手机")
         private String phone;
     }
 }

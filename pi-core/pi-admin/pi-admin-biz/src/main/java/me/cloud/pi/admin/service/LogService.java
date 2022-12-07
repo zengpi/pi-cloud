@@ -19,7 +19,7 @@ package me.cloud.pi.admin.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import me.cloud.pi.admin.api.dto.LogDTO;
 import me.cloud.pi.admin.pojo.po.SysLog;
-import me.cloud.pi.admin.pojo.query.LogQueryParam;
+import me.cloud.pi.admin.pojo.query.LogQuery;
 import me.cloud.pi.admin.pojo.vo.LogVO;
 import me.cloud.pi.common.mybatis.util.PiPage;
 
@@ -41,18 +41,18 @@ public interface LogService extends IService<SysLog> {
      * @param queryParam /
      * @return /
      */
-    PiPage<LogVO> getLogs(LogQueryParam queryParam);
+    PiPage<LogVO> getLogs(LogQuery queryParam);
 
     /**
      * 删除日志
      * @param ids /
      */
-    void delLog(String ids);
+    void deleteLogs(String ids);
 
     /**
      * 导出日志
      * @param queryParam /
      * @param response /
      */
-    void export(LogQueryParam queryParam, HttpServletResponse response);
+    void export(LogQuery queryParam, HttpServletResponse response);
 }

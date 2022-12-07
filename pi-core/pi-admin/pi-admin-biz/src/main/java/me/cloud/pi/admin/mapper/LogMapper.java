@@ -18,7 +18,7 @@ package me.cloud.pi.admin.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import me.cloud.pi.admin.pojo.po.SysLog;
-import me.cloud.pi.admin.pojo.query.LogQueryParam;
+import me.cloud.pi.admin.pojo.query.LogQuery;
 import me.cloud.pi.admin.pojo.vo.LogExportVO;
 import me.cloud.pi.common.mybatis.util.PiPage;
 import org.apache.ibatis.annotations.Param;
@@ -37,5 +37,5 @@ public interface LogMapper extends BaseMapper<SysLog> {
      * @param queryParam /
      * @return /
      */
-    List<LogExportVO> listExportLog(@Param("page") PiPage<LogExportVO> page, @Param("query") LogQueryParam queryParam);
+    List<LogExportVO> listExportLog(@Param("page") PiPage<LogExportVO> page, @Param("query") LogQuery queryParam);
 }

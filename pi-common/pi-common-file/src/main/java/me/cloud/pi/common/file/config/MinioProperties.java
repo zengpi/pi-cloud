@@ -14,18 +14,32 @@
  * limitations under the License.
  */
 
-package me.cloud.pi.admin.pojo.query;
+package me.cloud.pi.common.file.config;
 
 import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * @author ZnPi
- * @date 2022-09-22
+ * @date 2022-12-05 22:32
  */
 @Data
-public class MenuQueryParam {
+@ConfigurationProperties(prefix = "minio")
+public class MinioProperties {
     /**
-     * 关键词
+     * Minio 端点
      */
-    private String keyWord;
+    private String endpoint;
+    /**
+     * 用户名
+     */
+    private String accessKey;
+    /**
+     * 秘钥
+     */
+    private String secretKey;
+    /**
+     * 桶名称
+     */
+    private String bucket;
 }

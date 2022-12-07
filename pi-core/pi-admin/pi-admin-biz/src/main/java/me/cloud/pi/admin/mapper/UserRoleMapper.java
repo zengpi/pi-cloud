@@ -19,10 +19,18 @@ package me.cloud.pi.admin.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import me.cloud.pi.admin.pojo.po.SysUserRole;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * @author ZnPi
  * @date 2022-08-30
  */
 public interface UserRoleMapper extends BaseMapper<SysUserRole> {
+    /**
+     * 给定的 userRole 是否存在
+     *
+     * @param userRole /
+     * @return 1:存在，null:不存在
+     */
+    Integer existsByUserRole(@Param("userRole") SysUserRole userRole);
 }

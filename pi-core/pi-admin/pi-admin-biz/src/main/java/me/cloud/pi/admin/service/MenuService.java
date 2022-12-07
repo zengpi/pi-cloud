@@ -16,12 +16,12 @@
 
 package me.cloud.pi.admin.service;
 
-import cn.hutool.core.lang.tree.Tree;
 import com.baomidou.mybatisplus.extension.service.IService;
 import me.cloud.pi.admin.pojo.dto.MenuDTO;
 import me.cloud.pi.admin.pojo.po.SysMenu;
-import me.cloud.pi.admin.pojo.query.MenuQueryParam;
-import me.cloud.pi.admin.pojo.vo.MenuVO;
+import me.cloud.pi.admin.pojo.query.MenuTreeQuery;
+import me.cloud.pi.admin.pojo.vo.CurrentUserMenuTreeVO;
+import me.cloud.pi.admin.pojo.vo.MenuTreeVO;
 import me.cloud.pi.common.web.pojo.vo.SelectTreeVO;
 
 import java.util.List;
@@ -32,42 +32,15 @@ import java.util.List;
  */
 public interface MenuService extends IService<SysMenu> {
     /**
-     * 根据角色 ID 获取权限标识
-     * @param ids 角色 ID
-     * @return 权限标识
-     */
-    List<SysMenu> listPermissionByRoleIds(Long[] ids);
-
-    /**
-     * 构建当前用户的树形菜单
-     * @return 当前用户的树形菜单
-     */
-    List<Tree<Long>> buildMenu();
-
-    /**
-     * 构建当前用户的树形菜单
-     * @param username 用户名，用于缓存 key
-     * @return 当前用户的树形菜单
-     */
-    List<Tree<Long>> buildMenu(String username);
-
-    /**
-     * 获取菜单
+     * 获取菜单（树形）
      * @param query 查询条件
-     * @return 菜单列表
+     * @return 菜单（树形）
      */
-    List<MenuVO> getMenus(MenuQueryParam query);
+    List<MenuTreeVO> getMenuTree(MenuTreeQuery query);
 
     /**
-     * 菜单树形选择
-     * @param containBtn 是否包含按钮
-     * @return /
-     */
-    List<SelectTreeVO> selectTree(boolean containBtn);
-
-    /**
-     * 新增或编辑
-     * @param dto 菜单表单 DTO
+     * 新增或编辑菜单
+     * @param dto MenuDTO
      */
     void saveOrUpdate(MenuDTO dto);
 
@@ -75,5 +48,34 @@ public interface MenuService extends IService<SysMenu> {
      * 删除
      * @param ids 菜单 ID，多个以逗号分隔
      */
-    void delete(String ids);
+    void deleteMenu(String ids);
+
+    /**
+     * 构建当前用户的树形菜单
+     * @param username 用户名，用于缓存 key
+     * @return 当前用户的树形菜单
+     */
+    List<CurrentUserMenuTreeVO> buildMenu(String username);
+
+    /**
+     * 获取菜单选择器（树形）
+     * @param containsButtons 是否包含按钮
+     * @return 菜单选择器（树形）
+     */
+    List<SelectTreeVO> getMenuSelectTree(Boolean containsButtons);
+
+    /**
+     * 根据角色 ID 获取权限标识
+     * @param ids 角色 ID
+     * @return 权限标识
+     */
+    List<SysMenu> listPermissionByRoleIds(Long[] ids);
+
+    /**
+     * 根据角色 ID 获取菜单 ID 列表
+     *
+     * @param roleId 角色 ID
+     * @return 菜单 ID 列表
+     */
+    List<Long> getMenuIdsByRoleId(Long roleId);
 }

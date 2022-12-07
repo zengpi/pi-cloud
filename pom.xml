@@ -36,6 +36,7 @@
 		<spring-boot-admin.version>2.5.1</spring-boot-admin.version>
 		<xxl-job-core.version>2.3.1</xxl-job-core.version>
 
+		<okhttp3.version>4.8.1</okhttp3.version>
 		<lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
 
 		<pi.cloud-version>1.0.0-SNAPSHOT</pi.cloud-version>
@@ -130,6 +131,11 @@
 			<dependency>
 				<groupId>me.cloud.pi</groupId>
 				<artifactId>pi-common-feign</artifactId>
+				<version>${pi.cloud-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>me.cloud.pi</groupId>
+				<artifactId>pi-common-file</artifactId>
 				<version>${pi.cloud-version}</version>
 			</dependency>
 			<dependency>

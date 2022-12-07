@@ -62,7 +62,7 @@ public class SecurityUtils {
      * 获取当前用户的授权
      * @return 当前用户的授权
      */
-    public static List<String> getRoleCodeList(){
+    public static List<String> getAuthorities(){
         Jwt jwt = getJwt();
         if(jwt == null) {
             return Collections.emptyList();

@@ -20,6 +20,8 @@ import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.annotation.write.style.ColumnWidth;
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * 用户导出 VO
  * @author ZnPi
@@ -27,7 +29,9 @@ import lombok.Data;
  */
 @Data
 @ColumnWidth(20)
-public class UserExportVO {
+public class UserExportVO implements Serializable {
+    private static final long serialVersionUID = -8934681702690528999L;
+
     /**
      * 用户名
      */

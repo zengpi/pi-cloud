@@ -17,7 +17,7 @@
 package me.cloud.pi.admin.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import me.cloud.pi.admin.pojo.dto.AllocationRoleMenuDTO;
+import me.cloud.pi.admin.pojo.dto.RoleMenuAllocationDTO;
 import me.cloud.pi.admin.pojo.po.SysRoleMenu;
 
 import java.util.List;
@@ -28,15 +28,9 @@ import java.util.List;
  */
 public interface RoleMenuService extends IService<SysRoleMenu> {
     /**
-     * 根据角色 ID 获取菜单 ID 列表
-     * @param roleId 角色 ID
-     * @return 菜单 ID 列表
-     */
-    List<Long> getMenuLeafIdsByRoleId(Long roleId);
-
-    /**
      * 为角色分配菜单
-     * @param dto /
+     *
+     * @param dto RoleMenuAllocationDTO
      */
-    void allocationRoleMenu(AllocationRoleMenuDTO dto);
+    void roleMenuAllocation(RoleMenuAllocationDTO dto);
 }

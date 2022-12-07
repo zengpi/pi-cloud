@@ -17,8 +17,11 @@
 package me.cloud.pi.admin.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import me.cloud.pi.admin.pojo.dto.DeptDTO;
 import me.cloud.pi.admin.pojo.po.SysDept;
+import me.cloud.pi.admin.pojo.query.DeptTreeQuery;
 import me.cloud.pi.admin.pojo.vo.DeptTreeVO;
+import me.cloud.pi.common.web.pojo.vo.SelectTreeVO;
 
 import java.util.List;
 
@@ -28,8 +31,39 @@ import java.util.List;
  */
 public interface DeptService extends IService<SysDept> {
     /**
-     * 获取部门树
-     * @return 部门树
+     * 获取部门（树形）
+     *
+     * @param query 查询参数
+     * @return 部门（树形）
      */
-    List<DeptTreeVO> getDeptTree();
+    List<DeptTreeVO> getDeptTree(DeptTreeQuery query);
+
+    /**
+     * 新增或编辑部门
+     *
+     * @param dto DeptDTO
+     */
+    void saveOrUpdate(DeptDTO dto);
+
+    /**
+     * 删除部门
+     *
+     * @param ids 待删除记录的 ID 列表，以逗号分隔
+     */
+    void deleteDept(String ids);
+
+    /**
+     * 获取部门选择器（树形）
+     *
+     * @return 部门选择器（树形）
+     */
+    List<SelectTreeVO> getDeptSelectTree();
+
+    /**
+     * 指定的 DeptId 是否存在
+     *
+     * @param deptId 部门 ID
+     * @return 1：存在；null：不存在
+     */
+    Integer existsByDeptId(Long deptId);
 }

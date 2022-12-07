@@ -19,56 +19,58 @@ package me.cloud.pi.admin.converter;
 
 import me.cloud.pi.admin.pojo.dto.MenuDTO;
 import me.cloud.pi.admin.pojo.po.SysMenu;
-import me.cloud.pi.admin.pojo.vo.MenuVO;
+import me.cloud.pi.admin.pojo.vo.CurrentUserMenuTreeVO;
+import me.cloud.pi.admin.pojo.vo.MenuTreeVO;
 import me.cloud.pi.common.web.pojo.vo.SelectTreeVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
-import java.util.List;
-
 /**
  * @author ZnPi
  * @date 2022-09-22
  */
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = VisibleToHiddenFormat.class)
 public interface MenuConverter {
     /**
-     * menu PO -> VO
+     * MenuDTO -> SysMenu
      *
-     * @param menu /
-     * @return /
+     * @param dto MenuDTO
+     * @return SysMenu
      */
-    @Mappings({
-            @Mapping(source = "externalLinks", target = "externalLinks"),
-            @Mapping(source = "createTime", target = "createTime")
-    })
-    MenuVO menuPoToMenuVo(SysMenu menu);
+    SysMenu menuDtoToSysMenu(MenuDTO dto);
 
     /**
-     * po 转 vo
+     * SysMenu -> MenuTreeVO
      *
-     * @param menus 菜单
-     * @return /
+     * @param menu SysMenu
+     * @return MenuTreeVO
      */
-    List<MenuVO> menusPoToMenusVo(List<SysMenu> menus);
+    MenuTreeVO sysMenuToMenuTreeVo(SysMenu menu);
 
     /**
-     * po -> selectTree
+     * SysMenu -> CurrentUserMenuTreeVO
      *
-     * @param menu /
-     * @return /
+     * @param menu SysMenu
+     * @return CurrentUserMenuTreeVO
      */
-    @Mappings({
-            @Mapping(source = "id", target = "value"),
-            @Mapping(source = "name", target = "label")
-    })
-    SelectTreeVO menuPoToSelectTreeVo(SysMenu menu);
+    @Mapping(target = "children", ignore = true)
+    @Mapping(target = "meta.title", source = "name")
+    @Mapping(target = "meta.type", source = "type")
+    @Mapping(target = "meta.icon", source = "icon")
+    @Mapping(target = "meta.hidden", source = "visible")
+    @Mapping(target = "meta.keepAlive", source = "type")
+    CurrentUserMenuTreeVO sysMenuToCurrentUserMenuTreeVo(SysMenu menu);
 
     /**
-     * dto -> po
-     * @param dto /
-     * @return /
+     * SysMenu -> SelectTreeVO
+     *
+     * @param menu SysMenu
+     * @return SelectTreeVO
      */
-    SysMenu menuDtoToMenuPo(MenuDTO dto);
+    @Mapping(source = "id", target = "value")
+    @Mapping(source = "name", target = "label")
+    @Mapping(target = "children", ignore = true)
+    SelectTreeVO sysMenuToSelectTreeVo(SysMenu menu);
+
 }

@@ -19,7 +19,7 @@ package me.cloud.pi.admin.pojo.query;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import me.cloud.pi.common.mybatis.base.BaseQueryParam;
+import me.cloud.pi.common.mybatis.base.BaseQuery;
 
 import java.time.LocalDateTime;
 
@@ -27,10 +27,10 @@ import java.time.LocalDateTime;
  * @author ZnPi
  * @date 2022-11-20
  */
+@Schema(title = "日志查询参数")
 @Data
 @EqualsAndHashCode(callSuper = true)
-@Schema(description = "日志查询参数")
-public class LogQueryParam extends BaseQueryParam {
+public class LogQuery extends BaseQuery {
     @Schema(description = "查询字段")
     private String queryColumn;
 

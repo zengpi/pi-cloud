@@ -14,26 +14,18 @@
  * limitations under the License.
  */
 
-package me.cloud.pi.admin.pojo.dto;
+package me.cloud.pi.admin.pojo.query;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-
-import javax.validation.constraints.NotNull;
 
 /**
  * @author ZnPi
- * @date 2022-09-26
+ * @date 2022-09-22
  */
 @Data
-public class AllocationRoleUserDTO {
-    @NotNull(message = "角色 ID 不能为空")
-    private Long roleId;
-    /**
-     * 分配用户 ID，多个以逗号分隔
-     */
-    private String addUserIds;
-    /**
-     * 移除用户 ID，多个以逗号分隔
-     */
-    private String removeUserIds;
+@Schema(title = "获取菜单（树形）查询参数")
+public class MenuTreeQuery {
+    @Schema(description = "关键词")
+    private String keyWord;
 }

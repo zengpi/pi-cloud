@@ -17,17 +17,19 @@
 package me.cloud.pi.admin.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import me.cloud.pi.admin.pojo.dto.UserEditDTO;
+import me.cloud.pi.admin.pojo.dto.UserDTO;
+import me.cloud.pi.admin.pojo.dto.ProfileDTO;
 import me.cloud.pi.admin.pojo.dto.UserImportDTO;
-import me.cloud.pi.admin.pojo.form.UserEditForm;
-import me.cloud.pi.admin.pojo.form.UserForm;
 import me.cloud.pi.admin.pojo.po.SysUser;
-import me.cloud.pi.admin.pojo.query.UserQueryParam;
+import me.cloud.pi.admin.pojo.query.RoleMemberQuery;
+import me.cloud.pi.admin.pojo.query.UserQuery;
 import me.cloud.pi.admin.pojo.vo.OptionalUserVO;
+import me.cloud.pi.admin.pojo.vo.RoleMemberVO;
 import me.cloud.pi.admin.pojo.vo.UserInfoVO;
 import me.cloud.pi.admin.pojo.vo.UserVO;
 import me.cloud.pi.common.mybatis.util.PiPage;
-import me.cloud.pi.common.mybatis.base.BaseQueryParam;
+import me.cloud.pi.common.mybatis.base.BaseQuery;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -41,80 +43,74 @@ public interface UserService extends IService<SysUser> {
      * 用户查询
      *
      * @param query 查询条件
-     * @return /
+     * @return 用户
      */
-    PiPage<UserVO> getUsers(UserQueryParam query);
+    PiPage<UserVO> getUsers(UserQuery query);
 
     /**
-     * 新增
+     * 新增用户
      *
-     * @param form 表单数据
+     * @param dto UserDTO
      */
-    void save(UserForm form);
-
-    /**
-     * 获取用户信息
-     *
-     * @return /
-     */
-    UserInfoVO getUserInfo();
-
-    /**
-     * 获取用户信息
-     *
-     * @param username 用户名
-     * @return /
-     */
-    UserInfoVO getUserInfo(String username);
-
-    /**
-     * 修改用户信息
-     *
-     * @param userEditDTO 待修改用户信息
-     */
-    void editPersonalInfo(UserEditDTO userEditDTO);
-
-    /**
-     * 删除
-     *
-     * @param ids 用户 ID，多个以逗号分隔
-     */
-    void delete(String ids);
+    void saveUser(UserDTO dto);
 
     /**
      * 编辑用户
      *
-     * @param userEditForm /
+     * @param dto UserDTO
      */
-    void edit(UserEditForm userEditForm);
+    void updateUser(UserDTO dto);
 
     /**
-     * 下载用户列表
+     * 删除用户
+     *
+     * @param ids 待删除用户 ID，多个以逗号分隔
+     */
+    void deleteUser(String ids);
+
+    /**
+     * 用户导出
      *
      * @param query    用户查询参数
      * @param response 响应
      * @throws IOException If the named encoding is not supported / if an input or output exception occurred
      */
-    void export(UserQueryParam query, HttpServletResponse response) throws IOException;
+    void exportUser(UserQuery query, HttpServletResponse response) throws IOException;
 
     /**
      * 下载用户导入模板
      *
-     * @param response 相应
-     * @throws IOException /
+     * @param response HttpServletResponse
+     * @throws IOException If the named encoding is not supported / if an input or output exception occurred
      */
     void downloadUserImportTemp(HttpServletResponse response) throws IOException;
 
+
     /**
-     * 导入用户
+     * 用户导入
      *
      * @param dto 用户导入 DTO
-     * @return 导入结果。
+     * @return 导入结果
      */
     String importUser(UserImportDTO dto);
 
     /**
-     * 密码重置
+     * 获取用户信息
+     *
+     * @param username 用户名。用于缓存 key
+     * @return /
+     */
+    UserInfoVO getUserInfo(String username);
+
+    /**
+     * 修改用户个人信息
+     *
+     * @param profileDTO 待修改用户个人信息
+     */
+    void editProfile(ProfileDTO profileDTO);
+
+    /**
+     * 密码重置，默认密码为 123456
      *
      * @param id 待重置密码的用户 ID
      */
@@ -126,12 +122,22 @@ public interface UserService extends IService<SysUser> {
      * @param query 查询条件
      * @return 可选用户列表
      */
-    PiPage<OptionalUserVO> getOptionalUsers(BaseQueryParam query);
+    PiPage<OptionalUserVO> getOptionalUsers(BaseQuery query);
 
     /**
-     * 根据用户名修改 avatar
+     * 头像上传
+     * @param file 头像
      * @param username 用户名
-     * @param avatar 头像路径
+     * @param avatar 旧头像名称
      */
-    void updateAvatarByUserName(String username, String avatar);
+    void uploadAvatar(MultipartFile file, String username, String avatar);
+
+
+    /**
+     * 角色成员
+     *
+     * @param query 查询参数
+     * @return 角色成员
+     */
+    PiPage<RoleMemberVO> getRoleMembers(RoleMemberQuery query);
 }

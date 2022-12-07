@@ -20,8 +20,13 @@ import lombok.extern.slf4j.Slf4j;
 import me.cloud.pi.common.web.enums.ResponseStatus;
 import me.cloud.pi.common.web.util.ResponseData;
 import me.cloud.pi.common.web.util.ThrowableUtil;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.stream.Collectors;
 
 /**
  * 全局异常类
@@ -30,16 +35,31 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  */
 @RestControllerAdvice
 @Slf4j
-public class GlobalExceptionHandler {
+public class GlobalExceptionHandler extends RuntimeException{
+    private static final long serialVersionUID = -458561019236063090L;
+
     /**
      * 业务异常
      * @param e /
      * @return /
      */
+    @org.springframework.web.bind.annotation.ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = BadRequestException.class)
     public ResponseData<Object> badRequestException(BadRequestException e){
         log.error(ThrowableUtil.getStackTrace(e));
         return ResponseData.error(e.getCode(), e.getMessage());
+    }
+
+    @org.springframework.web.bind.annotation.ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value = MethodArgumentNotValidException.class)
+    public ResponseData<?> methodArgumentNotValidException(MethodArgumentNotValidException e){
+        log.error(ThrowableUtil.getStackTrace(e));
+        String msg = e.getBindingResult()
+                .getAllErrors()
+                .stream()
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                .collect(Collectors.joining("；"));
+        return ResponseData.error(ResponseStatus.REQUEST_PARAM_ERROR, msg);
     }
 
     /**

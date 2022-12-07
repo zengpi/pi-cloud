@@ -16,6 +16,7 @@
 
 package me.cloud.pi.admin.pojo.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
@@ -24,26 +25,20 @@ import javax.validation.constraints.NotNull;
  * @author ZnPi
  * @date 2022-09-25
  */
+@Schema(title = "角色 DTO")
 @Data
 public class RoleDTO {
-    /**
-     * 唯一标识
-     */
+    @Schema(description = "标识")
     private String id;
-    /**
-     * 角色名称
-     */
+
+    @Schema(description = "角色名称")
     @NotNull(message = "角色名称不能为空")
     private String name;
 
-    /**
-     * 角色编码
-     */
+    @Schema(description = "角色编码")
     @NotNull(message = "角色编码不能为空")
     private String roleCode;
 
-    /**
-     * 角色描述
-     */
+    @Schema(description = "角色描述")
     private String roleDesc;
 }

@@ -17,8 +17,10 @@
 package me.cloud.pi.admin.converter;
 
 
+import me.cloud.pi.admin.pojo.dto.DeptDTO;
 import me.cloud.pi.admin.pojo.po.SysDept;
 import me.cloud.pi.admin.pojo.vo.DeptTreeVO;
+import me.cloud.pi.common.web.pojo.vo.SelectTreeVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -29,10 +31,30 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface DeptConverter {
     /**
-     * po -> vo
-     * @param sysDept /
-     * @return /
+     * SysDept -> DeptTreeVO
+     *
+     * @param sysDept SysDept
+     * @return DeptTreeVO
      */
     @Mapping(target = "children", ignore = true)
-    DeptTreeVO sysDeptPoToDeptTreeVo(SysDept sysDept);
+    DeptTreeVO sysDeptToDeptTreeVO(SysDept sysDept);
+
+    /**
+     * DeptDTO -> SysDept
+     *
+     * @param dto DeptDTO
+     * @return SysDept
+     */
+    SysDept deptDtoToSysDept(DeptDTO dto);
+
+    /**
+     * SysDept -> SelectTreeVO
+     *
+     * @param sysDept SysDept
+     * @return SelectTreeVO
+     */
+    @Mapping(source = "id", target = "value")
+    @Mapping(source = "name", target = "label")
+    @Mapping(target = "children", ignore = true)
+    SelectTreeVO sysDeptToSelectTreeVo(SysDept sysDept);
 }

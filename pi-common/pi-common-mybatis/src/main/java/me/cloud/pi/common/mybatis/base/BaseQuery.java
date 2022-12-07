@@ -14,14 +14,35 @@
  * limitations under the License.
  */
 
-package me.cloud.pi.admin.pojo.query;
+package me.cloud.pi.common.mybatis.base;
 
-
-import me.cloud.pi.common.mybatis.base.BaseQueryParam;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * @author ZnPi
- * @date 2022-09-24
+ * @date 2022-08-29
  */
-public class RoleQueryParam extends BaseQueryParam {
+@Getter
+@Setter
+@Schema(description = "基础查询参数")
+public class BaseQuery {
+    /**
+     * 页码
+     */
+    @Schema(description = "页码")
+    private Integer pageNum = 1;
+
+    /**
+     * 每页记录数
+     */
+    @Schema(description = "每页记录数")
+    private Integer pageSize = 20;
+
+    /**
+     * 关键词
+     */
+    @Schema(description = "关键词")
+    private String keyWord;
 }

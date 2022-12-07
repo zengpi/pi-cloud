@@ -16,23 +16,30 @@
 
 package me.cloud.pi.admin.pojo.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 /**
  * @author ZnPi
- * @date 2022-09-26
+ * @date 2022-12-01 13:55
  */
+@Schema(title="部门 DTO")
 @Data
-public class AllocationRoleMenuDTO {
-    /**
-     * 角色 ID
-     */
-    @NotNull(message = "角色 ID 不能为空")
-    private Long roleId;
-    /**
-     * 菜单 ID 列表，多个以逗号分隔
-     */
-    private String menuIds;
+public class DeptDTO {
+    @Schema(description = "标识")
+    private Long id;
+
+    @Schema(description = "部门名称")
+    @NotBlank(message = "部门名称不能为空")
+    private String name;
+
+    @Schema(description = "排序")
+    private Integer sort;
+
+    @Schema(description = "父部门 ID")
+    @NotNull(message = "上级类目不能为空")
+    private Long parentId;
 }

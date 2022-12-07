@@ -20,14 +20,17 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import me.cloud.pi.admin.pojo.dto.DeptDTO;
+import me.cloud.pi.admin.pojo.query.DeptTreeQuery;
 import me.cloud.pi.admin.pojo.vo.DeptTreeVO;
 import me.cloud.pi.admin.service.DeptService;
+import me.cloud.pi.common.web.pojo.vo.SelectTreeVO;
 import me.cloud.pi.common.web.util.ResponseData;
 import org.springframework.http.HttpHeaders;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -35,21 +38,47 @@ import java.util.List;
  * @date 2022-09-04
  */
 @RestController
-@RequestMapping("dept")
+@RequestMapping("/dept")
+@Tag(name = "部门管理")
 @RequiredArgsConstructor
-@Tag(name = "DeptController", description = "部门管理")
 @SecurityRequirement(name = HttpHeaders.AUTHORIZATION)
 public class DeptController {
     private final DeptService deptService;
 
-    /**
-     * 返回部门的树形菜单
-     *
-     * @return 当前用户的树形菜单
-     */
-    @Operation(summary = "返回部门的树形菜单")
-    @GetMapping("/deptTree")
-    public ResponseData<List<DeptTreeVO>> deptTree(){
-        return ResponseData.ok(deptService.getDeptTree());
+    @GetMapping
+    @Operation(summary = "获取部门（树形）")
+    @PreAuthorize("hasAuthority('sys_dept_query')")
+    public ResponseData<List<DeptTreeVO>> getDeptTree(DeptTreeQuery query) {
+        return ResponseData.ok(deptService.getDeptTree(query));
+    }
+
+    @PostMapping
+    @Operation(summary = "新增部门")
+    @PreAuthorize("hasAuthority('sys_dept_add')")
+    public ResponseData<?> saveDept(@RequestBody @Valid DeptDTO dto) {
+        deptService.saveOrUpdate(dto);
+        return ResponseData.ok();
+    }
+
+    @PutMapping
+    @Operation(summary = "编辑部门")
+    @PreAuthorize("hasAuthority('sys_dept_update')")
+    public ResponseData<?> updateDept(@RequestBody @Valid DeptDTO dto) {
+        deptService.saveOrUpdate(dto);
+        return ResponseData.ok();
+    }
+
+    @DeleteMapping("/{ids}")
+    @Operation(summary = "删除部门")
+    @PreAuthorize("hasAuthority('sys_dept_delete')")
+    public ResponseData<?> deleteDept(@PathVariable String ids){
+        deptService.deleteDept(ids);
+        return ResponseData.ok();
+    }
+
+    @Operation(summary = "获取部门选择器（树形）")
+    @GetMapping("/deptSelectTree")
+    public ResponseData<List<SelectTreeVO>> getDeptSelectTree() {
+        return ResponseData.ok(deptService.getDeptSelectTree());
     }
 }

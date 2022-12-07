@@ -16,18 +16,25 @@
 
 package me.cloud.pi.admin.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import me.cloud.pi.admin.converter.DeptConverter;
 import me.cloud.pi.admin.mapper.DeptMapper;
+import me.cloud.pi.admin.pojo.dto.DeptDTO;
 import me.cloud.pi.admin.pojo.po.SysDept;
+import me.cloud.pi.admin.pojo.query.DeptTreeQuery;
 import me.cloud.pi.admin.pojo.vo.DeptTreeVO;
 import me.cloud.pi.admin.service.DeptService;
+import me.cloud.pi.common.web.constant.PiConstants;
+import me.cloud.pi.common.web.exception.BadRequestException;
+import me.cloud.pi.common.web.pojo.vo.SelectTreeVO;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author ZnPi
@@ -37,23 +44,98 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DeptServiceImpl extends ServiceImpl<DeptMapper, SysDept> implements DeptService {
     private final DeptConverter deptConverter;
+    private final DeptMapper deptMapper;
 
     @Override
-    public List<DeptTreeVO> getDeptTree() {
+    public List<DeptTreeVO> getDeptTree(DeptTreeQuery query) {
         List<SysDept> sysDeptList = super.list(Wrappers.lambdaQuery(SysDept.class)
-                .select(SysDept::getId, SysDept::getName, SysDept::getParentId));
-        return buildDeptTree(0L, sysDeptList);
+                .like(StrUtil.isNotBlank(query.getKeyWord()), SysDept::getName, query.getKeyWord())
+                .orderByAsc(SysDept::getSort)
+                .select(SysDept::getId, SysDept::getCreateTime, SysDept::getName, SysDept::getSort,
+                        SysDept::getParentId, SysDept::getParentId));
+
+        if (CollUtil.isEmpty(sysDeptList)) {
+            return Collections.emptyList();
+        }
+
+        if (StrUtil.isBlank(query.getKeyWord())) {
+            return buildDeptTree(PiConstants.TREE_ROOT_ID, sysDeptList);
+        }
+
+        Set<Long> deptIdSet = sysDeptList.stream().map(SysDept::getId).collect(Collectors.toSet());
+
+        return sysDeptList.stream().map(sysDept -> {
+            if (!deptIdSet.contains(sysDept.getParentId())) {
+                deptIdSet.add(sysDept.getParentId());
+                return buildDeptTree(sysDept.getParentId(), sysDeptList);
+            } else {
+                return new ArrayList<DeptTreeVO>();
+            }
+        }).collect(ArrayList::new, ArrayList::addAll, ArrayList::addAll);
     }
 
-    private List<DeptTreeVO> buildDeptTree(Long parentId, List<SysDept> sysDeptList){
-        List<DeptTreeVO> deptTreeList = new ArrayList<>();
-        sysDeptList.stream()
+    @Override
+    public void saveOrUpdate(DeptDTO dto) {
+        if (dto.getParentId().equals(dto.getId())) {
+            throw new BadRequestException("上级类目不能为自己");
+        }
+        SysDept sysDept = deptConverter.deptDtoToSysDept(dto);
+        super.saveOrUpdate(sysDept);
+    }
+
+    @Override
+    public void deleteDept(String ids) {
+        Set<Long> idSet = Arrays.stream(ids.split(",")).map(Long::valueOf).collect(Collectors.toSet());
+        Set<Long> toBeDeletedIdSet = new HashSet<>();
+        idSet.forEach(id -> {
+            if (!toBeDeletedIdSet.contains(id)) {
+                toBeDeletedIdSet.add(id);
+                getToBeDeletedChildrenIds(id, toBeDeletedIdSet);
+            }
+        });
+        super.removeByIds(toBeDeletedIdSet);
+    }
+
+    @Override
+    public List<SelectTreeVO> getDeptSelectTree() {
+        List<SysDept> sysDeptList = super.list(Wrappers.lambdaQuery(SysDept.class)
+                .select(SysDept::getId, SysDept::getName, SysDept::getParentId));
+        return buildDeptSelectTree(0L, sysDeptList);
+    }
+
+    @Override
+    public Integer existsByDeptId(Long deptId) {
+        return deptMapper.existsByDeptId(deptId);
+    }
+
+    private List<DeptTreeVO> buildDeptTree(Long parentId, List<SysDept> sysDeptList) {
+        return sysDeptList.stream()
                 .filter(sysDept -> sysDept.getParentId().equals(parentId))
-                .forEach(sysDept -> {
-                    DeptTreeVO deptTreeVO = deptConverter.sysDeptPoToDeptTreeVo(sysDept);
+                .map(sysDept -> {
+                    DeptTreeVO deptTreeVO = deptConverter.sysDeptToDeptTreeVO(sysDept);
                     deptTreeVO.setChildren(buildDeptTree(sysDept.getId(), sysDeptList));
-                    deptTreeList.add(deptTreeVO);
-                });
-        return deptTreeList;
+                    return deptTreeVO;
+                }).collect(Collectors.toList());
+    }
+
+    private void getToBeDeletedChildrenIds(Long parentId, Set<Long> toBeDeletedIdSet) {
+        List<SysDept> childrenDeptList = super.list(Wrappers.lambdaQuery(SysDept.class)
+                .eq(SysDept::getParentId, parentId)
+                .select(SysDept::getId));
+
+        childrenDeptList.forEach(childrenDept -> {
+            toBeDeletedIdSet.add(childrenDept.getId());
+            getToBeDeletedChildrenIds(childrenDept.getId(), toBeDeletedIdSet);
+        });
+    }
+
+    private List<SelectTreeVO> buildDeptSelectTree(Long parentId, List<SysDept> sysDeptList) {
+        return sysDeptList.stream()
+                .filter(sysDept -> sysDept.getParentId().equals(parentId))
+                .map(sysDept -> {
+                    SelectTreeVO deptSelectTreeVO = deptConverter.sysDeptToSelectTreeVo(sysDept);
+                    deptSelectTreeVO.setChildren(buildDeptSelectTree(sysDept.getId(), sysDeptList));
+                    return deptSelectTreeVO;
+                }).collect(Collectors.toList());
     }
 }

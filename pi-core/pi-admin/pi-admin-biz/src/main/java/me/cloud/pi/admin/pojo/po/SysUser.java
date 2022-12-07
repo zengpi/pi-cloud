@@ -20,6 +20,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import me.cloud.pi.common.mybatis.base.BaseEntity;
 
+import java.util.Date;
+
 /**
  * @author ZnPi
  * @date 2022-08-16
@@ -47,6 +49,10 @@ public class SysUser extends BaseEntity {
      * 性别
      */
     private Integer sex;
+    /**
+     * 生日
+     */
+    private Date bday;
     /**
      * 手机
      */

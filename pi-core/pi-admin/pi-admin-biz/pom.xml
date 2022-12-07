@@ -30,10 +30,6 @@
             <artifactId>mapstruct</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.minio</groupId>
-            <artifactId>minio</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>easyexcel</artifactId>
         </dependency>
@@ -41,6 +37,10 @@
         <dependency>
             <groupId>me.cloud.pi</groupId>
             <artifactId>pi-admin-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>me.cloud.pi</groupId>
+            <artifactId>pi-common-file</artifactId>
         </dependency>
         <dependency>
             <groupId>me.cloud.pi</groupId>
@@ -57,6 +57,11 @@
         <dependency>
             <groupId>me.cloud.pi</groupId>
             <artifactId>pi-common-swagger</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

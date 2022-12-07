@@ -25,6 +25,14 @@ import java.net.URLEncoder;
  * @date 2022-09-15
  */
 public class FileUtil {
+    /**
+     * 导出数据
+     * @param response 响应
+     * @param fileName 文件名
+     * @param suffix 文件名后缀
+     * @param runnable 导出逻辑
+     * @throws IOException /
+     */
     public static void export(HttpServletResponse response, String fileName, String suffix, Runnable runnable) throws IOException {
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         response.setCharacterEncoding("utf-8");

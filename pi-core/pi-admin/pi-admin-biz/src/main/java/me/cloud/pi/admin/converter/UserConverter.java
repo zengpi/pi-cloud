@@ -18,11 +18,9 @@ package me.cloud.pi.admin.converter;
 
 
 import me.cloud.pi.admin.pojo.dto.UserImportDTO;
-import me.cloud.pi.admin.pojo.form.UserEditForm;
-import me.cloud.pi.admin.pojo.form.UserForm;
+import me.cloud.pi.admin.pojo.dto.UserDTO;
 import me.cloud.pi.admin.pojo.po.SysUser;
 import me.cloud.pi.admin.pojo.vo.UserInfoVO;
-import me.cloud.pi.admin.pojo.vo.UserVO;
 import org.mapstruct.Mapper;
 
 /**
@@ -32,36 +30,23 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface UserConverter {
     /**
-     * 表单转 po
-     * @param form 表单
-     * @return po
+     * UserDTO -> SysUser
+     * @param dto UserDTO
+     * @return SysUser
      */
-    SysUser userFormToUserPo(UserForm form);
+    SysUser userDtoToSysUser(UserDTO dto);
 
     /**
-     * 表单转 po
-     * @param form 表单
-     * @return po
+     * UserImportDTO.FileItem -> SysUser
+     * @param fileItem UserImportDTO.FileItem
+     * @return SysUser
      */
-    SysUser userEditFormToUserPo(UserEditForm form);
+    SysUser fileItemToSysUser(UserImportDTO.FileItem fileItem);
 
     /**
-     * vo 转 po
-     * @param vo vo
-     * @return po
+     * SysUser -> UserInfoVO.UserInfo
+     * @param user SysUser
+     * @return UserInfoVO.UserInfo
      */
-    SysUser userVoToUserPo(UserVO vo);
-
-    /**
-     * fileItem 转 po
-     * @return po
-     */
-    SysUser fileItemToUserPo(UserImportDTO.FileItem fileItem);
-
-    /**
-     * po -> user info
-     * @param user /
-     * @return /
-     */
-    UserInfoVO.UserInfo userPoToUserInfo(SysUser user);
+    UserInfoVO.UserInfo sysUserToUserInfo(SysUser user);
 }

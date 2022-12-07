@@ -29,17 +29,17 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface RegisteredClientConverter {
     /**
-     * po 转 vo
+     * PiPage<SysRegisteredClient> -> PiPage<RegisteredClientVO>
      *
-     * @param registeredClients RegisteredClients
-     * @return /
+     * @param pageClients PiPage<SysRegisteredClient>
+     * @return PiPage<RegisteredClientVO>
      */
-    PiPage<RegisteredClientVO> clientPoPageToClientVoPage(PiPage<SysRegisteredClient> registeredClients);
+    PiPage<RegisteredClientVO> pageSysClientToPageClientVo(PiPage<SysRegisteredClient> pageClients);
 
     /**
-     * dto -> po
-     * @param dto /
-     * @return /
+     * RegisteredClientDTO -> SysRegisteredClient
+     * @param dto RegisteredClientDTO
+     * @return SysRegisteredClient
      */
-    SysRegisteredClient clientDtoToClientPo(RegisteredClientDTO dto);
+    SysRegisteredClient clientDtoToSysClient(RegisteredClientDTO dto);
 }

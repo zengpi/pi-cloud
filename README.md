@@ -8,7 +8,7 @@ pi-cloud 是基于 Spring Cloud 2021 & Spring Cloud Alibaba 2021、Spring Boot 2
 
 - 基于 Spring Cloud 2021 & Spring Cloud Alibaba 2021 提供微服务开发的一站式解决方案。
 - 基于 Spring Authorization Server 0.3.1、OAuth 2.0 Resource Server、JWT 的统一认证鉴权。
-- 整合 XXL-JOB 任务调度平台，开箱即用。
+- 整合 XXL-JOB 分布式任务调度平台，开箱即用。
 - 只保留核心功能，无过度自定义封装，易于学习和功能扩展。
 
 ## 预览

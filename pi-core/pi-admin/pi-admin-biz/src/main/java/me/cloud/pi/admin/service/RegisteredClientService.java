@@ -21,7 +21,7 @@ import me.cloud.pi.admin.pojo.dto.RegisteredClientDTO;
 import me.cloud.pi.admin.pojo.po.SysRegisteredClient;
 import me.cloud.pi.admin.pojo.vo.RegisteredClientVO;
 import me.cloud.pi.common.mybatis.util.PiPage;
-import me.cloud.pi.common.mybatis.base.BaseQueryParam;
+import me.cloud.pi.common.mybatis.base.BaseQuery;
 
 /**
  * @author ZnPi
@@ -34,7 +34,7 @@ public interface RegisteredClientService extends IService<SysRegisteredClient> {
      * @param queryParam 查询条件
      * @return 客户端列表
      */
-    PiPage<RegisteredClientVO> getClients(BaseQueryParam queryParam);
+    PiPage<RegisteredClientVO> getClients(BaseQuery queryParam);
 
     /**
      * 保存或更新客户端

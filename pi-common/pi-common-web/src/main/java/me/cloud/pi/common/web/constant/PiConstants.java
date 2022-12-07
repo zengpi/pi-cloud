@@ -24,5 +24,5 @@ public interface PiConstants {
     /**
      * 菜单树根节点
      */
-    Long MENU_TREE_ROOT_ID = -1L;
+    Long TREE_ROOT_ID = 0L;
 }

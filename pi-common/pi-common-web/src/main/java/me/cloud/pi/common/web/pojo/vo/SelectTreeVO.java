@@ -35,7 +35,7 @@ public class SelectTreeVO {
      */
     private String label;
     /**
-     * 子树
+     * 子节点
      */
     List<SelectTreeVO> children;
 }

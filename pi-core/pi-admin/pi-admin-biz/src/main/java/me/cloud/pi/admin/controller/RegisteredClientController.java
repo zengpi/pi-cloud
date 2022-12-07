@@ -21,10 +21,13 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import me.cloud.pi.admin.pojo.dto.RegisteredClientDTO;
+import me.cloud.pi.admin.pojo.vo.RegisteredClientVO;
 import me.cloud.pi.admin.service.RegisteredClientService;
-import me.cloud.pi.common.mybatis.base.BaseQueryParam;
+import me.cloud.pi.common.mybatis.base.BaseQuery;
+import me.cloud.pi.common.mybatis.util.PiPage;
 import me.cloud.pi.common.web.util.ResponseData;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -33,28 +36,39 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/client")
+@Tag(name = "客户端管理")
 @RequiredArgsConstructor
 @SecurityRequirement(name = HttpHeaders.AUTHORIZATION)
-@Tag(name = "RegisteredClientController", description = "客户端管理")
 public class RegisteredClientController {
     private final RegisteredClientService registeredClientService;
 
-    @Operation(summary = "获取客户端")
     @GetMapping
-    public ResponseData<?> getClients(BaseQueryParam queryParam) {
-        return ResponseData.ok(registeredClientService.getClients(queryParam));
+    @Operation(summary = "获取客户端")
+    @PreAuthorize("hasAuthority('sys_user_query')")
+    public ResponseData<PiPage<RegisteredClientVO>> getClients(BaseQuery query) {
+        return ResponseData.ok(registeredClientService.getClients(query));
     }
 
-    @Operation(summary = "新增或编辑客户端")
-    @RequestMapping(method = {RequestMethod.POST, RequestMethod.PUT})
-    public ResponseData<?> saveOrUpdate(@RequestBody RegisteredClientDTO dto) {
+    @PostMapping
+    @Operation(summary = "新增客户端")
+    @PreAuthorize("hasAuthority('sys_user_add')")
+    public ResponseData<?> saveClient(@RequestBody RegisteredClientDTO dto) {
         registeredClientService.saveOrUpdate(dto);
         return ResponseData.ok();
     }
 
-    @DeleteMapping
+    @PutMapping
+    @Operation(summary = "编辑客户端")
+    @PreAuthorize("hasAuthority('sys_user_edit')")
+    public ResponseData<?> updateClient(@RequestBody RegisteredClientDTO dto) {
+        registeredClientService.saveOrUpdate(dto);
+        return ResponseData.ok();
+    }
+
+    @DeleteMapping("/{ids}")
     @Operation(summary = "删除客户端")
-    public ResponseData<?> delClient(String ids){
+    @PreAuthorize("hasAuthority('sys_user_delete')")
+    public ResponseData<?> delClient(@PathVariable String ids){
         registeredClientService.delClient(ids);
         return ResponseData.ok();
     }

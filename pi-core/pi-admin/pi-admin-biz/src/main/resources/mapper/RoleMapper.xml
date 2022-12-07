@@ -35,24 +35,4 @@
                  LEFT JOIN sys_user su on sur.user_id = su.id
         WHERE su.username = #{username}
     </select>
-
-    <select id="getRoleMembers" resultType="me.cloud.pi.admin.pojo.vo.RoleMemberVO">
-        SELECT
-            ur.id, u.username, u.nickname, d.name dept_name
-        FROM sys_user u
-                 LEFT JOIN sys_dept d ON u.dept_id = d.id
-                 LEFT JOIN sys_user_role ur ON u.id = ur.user_id
-        WHERE u.deleted = 0
-          AND ur.role_id = #{queryParam.roleId}
-        <if test="queryParam.keyWord != null and queryParam.keyWord.trim() neq ''">
-            AND (
-                u.username LIKE CONCAT('%', #{queryParam.keyWord}, '%')
-                OR u.nickname LIKE CONCAT('%', #{queryParam.keyWord}, '%')
-                OR d.name LIKE CONCAT('%', #{queryParam.keyWord}, '%')
-            )
-        </if>
-    </select>
-    <select id="isExistRoleUser" resultType="java.lang.Integer">
-        SELECT 1 FROM sys_user_role WHERE role_id = #{userRole.roleId} AND user_id = #{userRole.userId} LIMIT 1
-    </select>
 </mapper>

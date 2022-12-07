@@ -16,6 +16,7 @@
 
 package me.cloud.pi.admin.pojo.vo;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -27,72 +28,55 @@ import java.util.List;
  * @date 2022-09-21
  */
 @Data
-public class MenuVO implements Serializable {
+@Schema(title="菜单（树形）")
+public class MenuTreeVO implements Serializable {
     private static final long serialVersionUID = -3992266652124385316L;
 
-    /**
-     * 唯一标识
-     */
+    @Schema(description = "标识")
     private Long id;
-    /**
-     * 菜单名称
-     */
+
+    @Schema(description = "创建时间")
+    private Date createTime;
+
+    @Schema(description = "菜单名称")
     private String name;
-    /**
-     * 路由路径（浏览器地址栏路径）
-     */
+
+    @Schema(description = "路由路径（浏览器地址栏路径）")
     private String path;
-    /**
-     * 组件名称
-     */
+
+    @Schema(description = "组件名称")
     private String componentName;
-    /**
-     * 组件路径（vue页面完整路径，省略.vue后缀）
-     */
+
+    @Schema(description = "组件路径（vue页面完整路径，省略.vue后缀）")
     private String component;
 
-    /**
-     * 权限标识
-     */
+    @Schema(description = "权限标识")
     private String permission;
-    /**
-     * 图标
-     */
+
+    @Schema(description = "图标")
     private String icon;
-    /**
-     * 排序
-     */
+
+    @Schema(description = "排序")
     private Integer sort;
-    /**
-     * 是否缓存（0:=关闭, 1:=开启）
-     */
+
+    @Schema(description = "是否缓存（0:=关闭, 1:=开启）")
     private Integer keepAlive;
-    /**
-     * 菜单类型（1:=菜单, 2:=目录，3:=按钮）
-     */
+
+    @Schema(description = "菜单类型（1:=菜单, 2:=目录，3:=按钮）")
     private Integer type;
-    /**
-     * 是否外链（0:=否, 1:=是）
-     */
+
+    @Schema(description = "是否外链（0:=否, 1:=是）")
     private Integer externalLinks;
-    /**
-     * 是否可见（0:=不可见，1：可见）
-     */
+
+    @Schema(description = "是否可见（0:=不可见，1：可见）")
     private Integer visible;
-    /**
-     * 重定向路径
-     */
+
+    @Schema(description = "重定向路径")
     private String redirect;
-    /**
-     * 父目录 ID（-1表示根目录）
-     */
+
+    @Schema(description = "父目录 ID（0表示根目录）")
     private Long parentId;
-    /**
-     * 子菜单
-     */
-    private List<MenuVO> children;
-    /**
-     * 创建时间
-     */
-    private Date createTime;
+
+    @Schema(description = "子菜单")
+    private List<MenuTreeVO> children;
 }

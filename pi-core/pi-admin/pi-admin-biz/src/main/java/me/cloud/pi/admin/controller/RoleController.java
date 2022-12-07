@@ -20,18 +20,21 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import me.cloud.pi.admin.pojo.dto.AllocationRoleMenuDTO;
-import me.cloud.pi.admin.pojo.dto.AllocationRoleUserDTO;
 import me.cloud.pi.admin.pojo.dto.RoleDTO;
-import me.cloud.pi.admin.pojo.query.RoleMemberQueryParam;
-import me.cloud.pi.admin.pojo.query.RoleQueryParam;
+import me.cloud.pi.admin.pojo.dto.RoleMenuAllocationDTO;
+import me.cloud.pi.admin.pojo.dto.RoleUserAllocationDTO;
+import me.cloud.pi.admin.pojo.query.RoleMemberQuery;
 import me.cloud.pi.admin.pojo.vo.RoleMemberVO;
 import me.cloud.pi.admin.pojo.vo.RoleVO;
 import me.cloud.pi.admin.service.RoleMenuService;
 import me.cloud.pi.admin.service.RoleService;
+import me.cloud.pi.admin.service.UserRoleService;
+import me.cloud.pi.admin.service.UserService;
+import me.cloud.pi.common.mybatis.base.BaseQuery;
 import me.cloud.pi.common.mybatis.util.PiPage;
 import me.cloud.pi.common.web.util.ResponseData;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -43,93 +46,71 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/role")
+@Tag(name = "角色管理")
 @RequiredArgsConstructor
-@Tag(name = "RoleController", description = "角色管理")
 @SecurityRequirement(name = HttpHeaders.AUTHORIZATION)
 public class RoleController {
     private final RoleService roleService;
+    private final UserService userService;
     private final RoleMenuService roleMenuService;
+    private final UserRoleService userRoleService;
 
-    /**
-     * 角色查询
-     *
-     * @param queryParam 查询参数
-     * @return 角色列表
-     */
     @GetMapping
-    @Operation(summary = "角色查询")
-    public ResponseData<PiPage<RoleVO>> roles(RoleQueryParam queryParam) {
-        return ResponseData.ok(roleService.roles(queryParam));
+    @Operation(summary = "获取角色")
+    @PreAuthorize("hasAuthority('sys_role_query')")
+    public ResponseData<PiPage<RoleVO>> getRoles(BaseQuery query) {
+        return ResponseData.ok(roleService.getRoles(query));
     }
 
-    /**
-     * 角色新增
-     *
-     * @param dto /
-     * @return /
-     */
-    @RequestMapping(method = { RequestMethod.POST, RequestMethod.PUT })
-    @Operation(summary = "角色新增")
-    public ResponseData<?> saveOrUpdate(@RequestBody @Valid RoleDTO dto) {
+    @PostMapping
+    @Operation(summary = "新增角色")
+    @PreAuthorize("hasAuthority('sys_role_add')")
+    public ResponseData<?> saveRole(@RequestBody @Valid RoleDTO dto) {
         roleService.saveOrUpdate(dto);
         return ResponseData.ok();
     }
 
-    /**
-     * 角色删除
-     * @param ids 待删除 ID，多个以逗号分隔
-     * @return /
-     */
-    @DeleteMapping
-    @Operation(summary = "角色删除")
-    public ResponseData<?> del(String ids){
-        roleService.del(ids);
+    @PutMapping
+    @Operation(summary = "编辑角色")
+    @PreAuthorize("hasAuthority('sys_role_edit')")
+    public ResponseData<?> updateRole(@RequestBody @Valid RoleDTO dto) {
+        roleService.saveOrUpdate(dto);
         return ResponseData.ok();
     }
 
-    /**
-     * 获取所有角色
-     *
-     * @return 角色列表
-     */
+    @DeleteMapping("/{ids}")
+    @Operation(summary = "删除角色")
+    @PreAuthorize("hasAuthority('sys_role_delete')")
+    public ResponseData<?> deleteRole(@PathVariable String ids){
+        roleService.deleteRole(ids);
+        return ResponseData.ok();
+    }
+
     @GetMapping("/allRoles")
     @Operation(summary = "获取所有角色")
     public ResponseData<List<RoleVO>> allRoles() {
         return ResponseData.ok(roleService.getAllRoles());
     }
 
-    /**
-     * 角色成员
-     * @param queryParam 查询参数
-     * @return 角色成员列表
-     */
     @GetMapping("/roleMembers")
-    @Operation(summary = "角色成员")
-    public ResponseData<PiPage<RoleMemberVO>> getRoleMembers(@Valid RoleMemberQueryParam queryParam){
-        return ResponseData.ok(roleService.getRoleMembers(queryParam));
+    @Operation(summary = "获取角色成员")
+    public ResponseData<PiPage<RoleMemberVO>> getRoleMembers(@Valid RoleMemberQuery queryParam){
+        return ResponseData.ok(userService.getRoleMembers(queryParam));
     }
 
-    /**
-     * 为角色分配用户
-     * @param dto /
-     * @return /
-     */
-    @PostMapping("/allocationRoleUser")
-    @Operation(summary = "为角色分配用户")
-    public ResponseData<?> allocationRoleUser(@RequestBody AllocationRoleUserDTO dto){
-        roleService.allocationRoleUser(dto);
+    @PostMapping("/roleUserAllocation")
+    @Operation(summary = "角色用户分配")
+    @PreAuthorize("hasAuthority('sys_role_user_allocation')")
+    public ResponseData<?> allocateRoleUser(@RequestBody RoleUserAllocationDTO dto){
+        userRoleService.allocationRoleUser(dto);
         return ResponseData.ok();
     }
 
-    /**
-     * 为角色分配菜单
-     * @param dto /
-     * @return /
-     */
-    @PostMapping("/allocationRoleMenu")
-    @Operation(summary = "为角色分配菜单")
-    public ResponseData<?> allocateRoleMenu(@RequestBody @Valid AllocationRoleMenuDTO dto){
-        roleMenuService.allocationRoleMenu(dto);
+    @PostMapping("/roleMenuAllocation")
+    @Operation(summary = "角色菜单分配")
+    @PreAuthorize("hasAuthority('sys_role_menu_allocation')")
+    public ResponseData<?> allocateRoleMenu(@RequestBody @Valid RoleMenuAllocationDTO dto){
+        roleMenuService.roleMenuAllocation(dto);
         return ResponseData.ok();
     }
 }

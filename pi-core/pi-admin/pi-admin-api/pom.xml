@@ -16,5 +16,9 @@
             <groupId>me.cloud.pi</groupId>
             <artifactId>pi-common-feign</artifactId>
         </dependency>
+        <dependency>
+            <groupId>me.cloud.pi</groupId>
+            <artifactId>pi-common-swagger</artifactId>
+        </dependency>
     </dependencies>
 </project>

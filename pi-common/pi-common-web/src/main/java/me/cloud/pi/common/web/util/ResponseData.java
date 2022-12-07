@@ -31,10 +31,14 @@ import java.time.LocalDateTime;
 @Data
 public class ResponseData<T> {
     private String code;
+
     private String msg;
+
     private Boolean success;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime time = LocalDateTime.now();
+
     private T data;
 
     private ResponseData(){}

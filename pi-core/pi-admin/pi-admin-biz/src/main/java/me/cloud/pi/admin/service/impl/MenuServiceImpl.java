@@ -17,9 +17,6 @@
 package me.cloud.pi.admin.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.lang.tree.Tree;
-import cn.hutool.core.lang.tree.TreeNode;
-import cn.hutool.core.lang.tree.TreeUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -30,24 +27,22 @@ import me.cloud.pi.admin.mapper.MenuMapper;
 import me.cloud.pi.admin.pojo.dto.MenuDTO;
 import me.cloud.pi.admin.pojo.po.SysMenu;
 import me.cloud.pi.admin.pojo.po.SysRole;
-import me.cloud.pi.admin.pojo.query.MenuQueryParam;
-import me.cloud.pi.admin.pojo.vo.MenuVO;
+import me.cloud.pi.admin.pojo.query.MenuTreeQuery;
+import me.cloud.pi.admin.pojo.vo.CurrentUserMenuTreeVO;
+import me.cloud.pi.admin.pojo.vo.MenuTreeVO;
 import me.cloud.pi.admin.service.MenuService;
 import me.cloud.pi.admin.service.RoleService;
 import me.cloud.pi.common.redis.constant.CacheConstants;
-import me.cloud.pi.common.security.util.SecurityUtils;
 import me.cloud.pi.common.web.constant.PiConstants;
 import me.cloud.pi.common.web.enums.MenuTypeEnum;
 import me.cloud.pi.common.web.exception.BadRequestException;
 import me.cloud.pi.common.web.pojo.vo.SelectTreeVO;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -59,40 +54,10 @@ import java.util.stream.Collectors;
 public class MenuServiceImpl extends ServiceImpl<MenuMapper, SysMenu> implements MenuService {
     private final MenuMapper menuMapper;
     private final MenuConverter menuConverter;
-
     public final RoleService roleService;
 
-    @Resource
-    @Lazy
-    private MenuService menuService;
-
     @Override
-    public List<SysMenu> listPermissionByRoleIds(Long[] ids) {
-        return menuMapper.listPermissionByRoleIds(ids);
-    }
-
-    @Override
-    public List<Tree<Long>> buildMenu() {
-        return menuService.buildMenu(SecurityUtils.getUserName());
-    }
-
-    @Override
-    @Cacheable(value = CacheConstants.CACHE_MENU, key = "#p0")
-    public List<Tree<Long>> buildMenu(String username) {
-        // 角色标识
-        List<SysRole> sysRoleList = roleService.listRoleByUserName(username);
-        List<String> roleCodes = sysRoleList.stream().map(SysRole::getRoleCode).collect(Collectors.toList());
-
-        // 根据角色编码列表获取菜单
-        Set<SysMenu> menuSet = new HashSet<>(menuMapper.listMenuByRoleCodeList(roleCodes));
-        List<TreeNode<Long>> treeNodes = menuSet.stream()
-                .filter(menu -> !MenuTypeEnum.BUTTON.getType().equals(menu.getType()))
-                .map(genTreeNode()).collect(Collectors.toList());
-        return TreeUtil.build(treeNodes, PiConstants.MENU_TREE_ROOT_ID);
-    }
-
-    @Override
-    public List<MenuVO> getMenus(MenuQueryParam query) {
+    public List<MenuTreeVO> getMenuTree(MenuTreeQuery query) {
         LambdaQueryWrapper<SysMenu> wrapper = Wrappers.lambdaQuery(SysMenu.class)
                 .like(StrUtil.isNotBlank(query.getKeyWord()), SysMenu::getName, query.getKeyWord())
                 .or()
@@ -106,38 +71,24 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, SysMenu> implements
                         SysMenu::getKeepAlive, SysMenu::getType, SysMenu::getExternalLinks, SysMenu::getVisible,
                         SysMenu::getRedirect, SysMenu::getParentId);
 
-        List<SysMenu> menus = super.list(wrapper);
+        List<SysMenu> menuList = super.list(wrapper);
 
-        if (CollUtil.isEmpty(menus)) {
+        if (CollUtil.isEmpty(menuList)) {
             return Collections.emptyList();
         }
 
-        // 查询所有
         if (StrUtil.isBlank(query.getKeyWord())) {
-            return this.buildMenuTree(menus, PiConstants.MENU_TREE_ROOT_ID);
+            return this.buildMenuTree(PiConstants.TREE_ROOT_ID, menuList);
         }
 
-        // 条件查询
-        List<Long> ids = menus.stream().map(SysMenu::getId).collect(Collectors.toList());
-        return menus.stream().map(e -> {
-            if (!ids.contains(e.getParentId())) {
-                ids.add(e.getParentId());
-                return buildMenuTree(menus, e.getParentId());
+        List<Long> ids = menuList.stream().map(SysMenu::getId).collect(Collectors.toList());
+        return menuList.stream().map(menu -> {
+            if (!ids.contains(menu.getParentId())) {
+                ids.add(menu.getParentId());
+                return buildMenuTree(menu.getParentId(), menuList);
             }
-            return new ArrayList<MenuVO>();
+            return new ArrayList<MenuTreeVO>();
         }).collect(ArrayList::new, ArrayList::addAll, ArrayList::addAll);
-    }
-
-    @Override
-    public List<SelectTreeVO> selectTree(boolean containBtn) {
-        List<SysMenu> menus = super.list(Wrappers.lambdaQuery(SysMenu.class)
-                .ne(!containBtn, SysMenu::getType, MenuTypeEnum.BUTTON.getType())
-                .select(SysMenu::getId, SysMenu::getName, SysMenu::getParentId)
-        );
-        if (CollUtil.isEmpty(menus)) {
-            return Collections.emptyList();
-        }
-        return buildSelectTree(menus, PiConstants.MENU_TREE_ROOT_ID);
     }
 
     @Override
@@ -149,91 +100,149 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, SysMenu> implements
         if (dto.getType().equals(MenuTypeEnum.DIR.getType()) && dto.getExternalLinks() != 1) {
             dto.setComponent("Navigation");
         }
-        SysMenu menu = menuConverter.menuDtoToMenuPo(dto);
+        SysMenu menu = menuConverter.menuDtoToSysMenu(dto);
         super.saveOrUpdate(menu);
+
+        // 更新 hasChildren
+        if(dto.getParentId() != 0){
+            SysMenu sysMenu = super.getOne(Wrappers.lambdaQuery(SysMenu.class)
+                    .eq(SysMenu::getId, dto.getParentId())
+                    .select(SysMenu::getHasChildren));
+            Optional.of(sysMenu).ifPresent(e -> {
+                if(e.getHasChildren() == 0){
+                    super.update(Wrappers.lambdaUpdate(SysMenu.class)
+                            .set(SysMenu::getHasChildren, 1)
+                            .eq(SysMenu::getId, dto.getParentId()));
+                }
+            });
+        }
     }
 
     @Override
-    public void delete(String ids) {
+    @Transactional
+    public void deleteMenu(String ids) {
         Set<Long> idSet = Arrays.stream(ids.split(",")).map(Long::valueOf).collect(Collectors.toSet());
-        List<SysMenu> menus = super.list(Wrappers.lambdaQuery(SysMenu.class)
-                .in(SysMenu::getId, idSet)
+        Set<Long> toBeDeletedIdSet = new HashSet<>();
+
+        idSet.forEach(id -> {
+            if (!toBeDeletedIdSet.contains(id)) {
+                toBeDeletedIdSet.add(id);
+                getToBeDeletedChildrenIds(id, toBeDeletedIdSet);
+            }
+        });
+
+        HashSet<Long> parentMenuIdSet = new HashSet<>();
+        idSet.forEach(id -> {
+            // 父菜单
+            SysMenu parentMenu = super.getOne(Wrappers.lambdaQuery(SysMenu.class)
+                    .eq(SysMenu::getId, id).select(SysMenu::getParentId));
+            if(parentMenu != null){
+                parentMenuIdSet.add(parentMenu.getParentId());
+            }
+        });
+
+        super.removeByIds(toBeDeletedIdSet);
+
+        // 更新 hasChildren
+        Set<Long> toBeUpdateHasChildrenId = new HashSet<>();
+        parentMenuIdSet.forEach(id -> {
+            // 父菜单
+            SysMenu parentMenu = super.getOne(Wrappers.lambdaQuery(SysMenu.class)
+                    .eq(SysMenu::getId, id).select(SysMenu::getId));
+            if(parentMenu != null){
+                // 父菜单是否有子菜单
+                long count = super.count(Wrappers.lambdaQuery(SysMenu.class)
+                        .eq(SysMenu::getParentId, parentMenu.getId()));
+                if(count <= 0) {
+                    toBeUpdateHasChildrenId.add(parentMenu.getId());
+                }
+            }
+        });
+        if(CollUtil.isNotEmpty(toBeUpdateHasChildrenId)){
+            super.update(Wrappers.lambdaUpdate(SysMenu.class)
+                    .set(SysMenu::getHasChildren, 0)
+                    .in(SysMenu::getId, toBeUpdateHasChildrenId));
+        }
+    }
+
+    @Override
+    @Cacheable(value = CacheConstants.CACHE_MENU, key = "#p0")
+    public List<CurrentUserMenuTreeVO> buildMenu(String username) {
+        // 角色标识
+        List<SysRole> sysRoleList = roleService.listRoleByUserName(username);
+        List<String> roleCodeList = sysRoleList.stream().map(SysRole::getRoleCode).collect(Collectors.toList());
+
+        return buildCurrentUserMenuTree(PiConstants.TREE_ROOT_ID, menuMapper.listMenuByRoleCodeList(roleCodeList));
+    }
+
+    @Override
+    public List<SelectTreeVO> getMenuSelectTree(Boolean containsButtons) {
+        List<SysMenu> menuList = super.list(Wrappers.lambdaQuery(SysMenu.class)
+                .ne(!containsButtons, SysMenu::getType, MenuTypeEnum.BUTTON.getType())
+                .select(SysMenu::getId, SysMenu::getName, SysMenu::getParentId)
+                .orderByAsc(SysMenu::getSort)
+        );
+        if (CollUtil.isEmpty(menuList)) {
+            return Collections.emptyList();
+        }
+        return buildMenuSelectTree(PiConstants.TREE_ROOT_ID, menuList);
+    }
+
+    @Override
+    public List<SysMenu> listPermissionByRoleIds(Long[] ids) {
+        return menuMapper.listPermissionByRoleIds(ids);
+    }
+
+    @Override
+    public List<Long> getMenuIdsByRoleId(Long roleId) {
+        return menuMapper.getMenuIdsByRoleId(roleId);
+    }
+
+    private List<MenuTreeVO> buildMenuTree(Long parentId, List<SysMenu> menuList) {
+        return menuList.stream()
+                .filter(menu -> menu.getParentId().equals(parentId))
+                .map(menu -> {
+                    MenuTreeVO menuTreeVO = menuConverter.sysMenuToMenuTreeVo(menu);
+                    menuTreeVO.setChildren(buildMenuTree(menu.getId(), menuList));
+                    return menuTreeVO;
+                }).collect(Collectors.toList());
+    }
+
+    private void getToBeDeletedChildrenIds(Long parentId, Set<Long> toBeDeletedIdSet) {
+        List<SysMenu> childrenMenuList = super.list(Wrappers.lambdaQuery(SysMenu.class)
+                .eq(SysMenu::getParentId, parentId)
                 .select(SysMenu::getId, SysMenu::getParentId));
-        Set<SysMenu> topMenus = new HashSet<>(idSet.size());
-        menus.forEach(e -> {
-            if (!idSet.contains(e.getParentId())) {
-                topMenus.add(e);
-            }
-        });
-        getChildrenDeleteMenus(topMenus, idSet);
-        super.removeByIds(idSet);
-    }
 
-    private void getChildrenDeleteMenus(Set<SysMenu> menus, Set<Long> idSet) {
-        menus.forEach(e -> {
-            List<SysMenu> childMenus = super.list(Wrappers.lambdaQuery(SysMenu.class)
-                    .eq(SysMenu::getParentId, e.getId())
-                    .select(SysMenu::getId, SysMenu::getParentId));
-            if (childMenus.size() > 0) {
-                idSet.addAll(childMenus.stream().map(SysMenu::getId).collect(Collectors.toSet()));
-                getChildrenDeleteMenus(new HashSet<>(childMenus), idSet);
-            }
+        childrenMenuList.forEach(childrenMenu -> {
+            toBeDeletedIdSet.add(childrenMenu.getId());
+            getToBeDeletedChildrenIds(childrenMenu.getId(), toBeDeletedIdSet);
         });
     }
 
-    private List<SelectTreeVO> buildSelectTree(List<SysMenu> menus, Long parentId) {
-        return menus.stream().filter(e -> e.getParentId().equals(parentId))
-                .map(e -> {
-                    SelectTreeVO selectTree = menuConverter.menuPoToSelectTreeVo(e);
-                    selectTree.setChildren(buildSelectTree(menus, e.getId()));
+    private List<CurrentUserMenuTreeVO> buildCurrentUserMenuTree(Long parentId, List<SysMenu> menuList) {
+        return menuList.stream()
+                .filter(menu -> menu.getParentId().equals(parentId))
+                .map(menu -> {
+                    CurrentUserMenuTreeVO currentUserMenuTreeVO = menuConverter.sysMenuToCurrentUserMenuTreeVo(menu);
+                    if (MenuTypeEnum.MENU.getType().equals(menu.getType())) {
+                        if (StrUtil.isNotBlank(menu.getComponentName())) {
+                            currentUserMenuTreeVO.setName(menu.getComponentName());
+                        } else {
+                            currentUserMenuTreeVO.setName(menu.getName());
+                        }
+                    }
+                    currentUserMenuTreeVO.setChildren(buildCurrentUserMenuTree(menu.getId(), menuList));
+                    return currentUserMenuTreeVO;
+                })
+                .collect(Collectors.toList());
+    }
+
+    private List<SelectTreeVO> buildMenuSelectTree(Long parentId, List<SysMenu> menuList) {
+        return menuList.stream().filter(e -> e.getParentId().equals(parentId))
+                .map(menu -> {
+                    SelectTreeVO selectTree = menuConverter.sysMenuToSelectTreeVo(menu);
+                    selectTree.setChildren(buildMenuSelectTree(menu.getId(), menuList));
                     return selectTree;
                 }).collect(Collectors.toList());
-    }
-
-    private List<MenuVO> buildMenuTree(List<SysMenu> menus, Long parentId) {
-        return menus.stream()
-                .filter(e -> e.getParentId().equals(parentId))
-                .map(e -> {
-                    MenuVO menu = menuConverter.menuPoToMenuVo(e);
-                    menu.setChildren(buildMenuTree(menus, e.getId()));
-                    return menu;
-                }).collect(Collectors.toList());
-    }
-
-    /**
-     * 生成树节点
-     *
-     * @return 树节点
-     */
-    private Function<SysMenu, TreeNode<Long>> genTreeNode() {
-        return menu -> {
-            TreeNode<Long> treeNode = new TreeNode<>();
-
-            treeNode.setId(menu.getId());
-            treeNode.setWeight(menu.getSort());
-            treeNode.setParentId(menu.getParentId());
-
-            HashMap<String, Object> extra = new HashMap<>(7);
-            extra.put("component", menu.getComponent());
-            extra.put("path", menu.getPath());
-            extra.put("redirect", menu.getRedirect());
-            if (MenuTypeEnum.MENU.getType().equals(menu.getType())) {
-                extra.put("name", menu.getComponentName());
-            }
-
-            HashMap<String, Object> meta = new HashMap<>(8);
-
-            meta.put("icon", menu.getIcon());
-            meta.put("type", menu.getType());
-            meta.put("permission", menu.getPermission());
-            meta.put("keepAlive", menu.getKeepAlive());
-            meta.put("title", menu.getName());
-            meta.put("hidden", !menu.getVisible().equals(1));
-
-            extra.put("meta", meta);
-            treeNode.setExtra(extra);
-
-            return treeNode;
-        };
     }
 }

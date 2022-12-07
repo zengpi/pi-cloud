@@ -16,6 +16,7 @@
 
 package me.cloud.pi.admin.pojo.vo;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -24,31 +25,38 @@ import java.io.Serializable;
  * @author ZnPi
  * @date 2022-08-19
  */
+@Schema(title = "用户信息")
 @Data
 public class UserInfoVO implements Serializable {
     private static final long serialVersionUID = 5131551841734401217L;
-    /**
-     * 用户信息
-     */
+
+    @Schema(description = "用户信息")
     private UserInfo userInfo;
 
-    /**
-     * 权限标识
-     */
+    @Schema(description = "权限标识")
     private String[] authorities;
 
-    /**
-     * 角色
-     */
+    @Schema(description = "角色")
     private String[] roles;
 
+    @Schema(description = "用户信息")
     @Data
     public static class UserInfo implements Serializable{
         private static final long serialVersionUID = 2028677663877849897L;
+
+        @Schema(description = "标识")
         private Long id;
+
+        @Schema(description = "用户名")
         private String username;
+
+        @Schema(description = "昵称")
         private String nickname;
+
+        @Schema(description = "手机")
         private String phone;
+
+        @Schema(description = "头像")
         private String avatar;
     }
 }

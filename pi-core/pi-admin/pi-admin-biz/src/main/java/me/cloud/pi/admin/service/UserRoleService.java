@@ -18,6 +18,7 @@ package me.cloud.pi.admin.service;
 
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import me.cloud.pi.admin.pojo.dto.RoleUserAllocationDTO;
 import me.cloud.pi.admin.pojo.po.SysUserRole;
 
 /**
@@ -25,4 +26,10 @@ import me.cloud.pi.admin.pojo.po.SysUserRole;
  * @date 2022-08-30
  */
 public interface UserRoleService extends IService<SysUserRole> {
+    /**
+     * 为角色分配用户
+     *
+     * @param dto RoleUserAllocationDTO
+     */
+    void allocationRoleUser(RoleUserAllocationDTO dto);
 }

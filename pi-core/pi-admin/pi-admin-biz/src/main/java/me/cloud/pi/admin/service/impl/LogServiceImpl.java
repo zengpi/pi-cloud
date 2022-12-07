@@ -28,7 +28,7 @@ import me.cloud.pi.admin.api.dto.LogDTO;
 import me.cloud.pi.admin.converter.LogConverter;
 import me.cloud.pi.admin.mapper.LogMapper;
 import me.cloud.pi.admin.pojo.po.SysLog;
-import me.cloud.pi.admin.pojo.query.LogQueryParam;
+import me.cloud.pi.admin.pojo.query.LogQuery;
 import me.cloud.pi.admin.pojo.vo.LogExportVO;
 import me.cloud.pi.admin.pojo.vo.LogVO;
 import me.cloud.pi.admin.service.LogService;
@@ -58,37 +58,38 @@ public class LogServiceImpl extends ServiceImpl<LogMapper, SysLog> implements Lo
     private final LogMapper logMapper;
 
     @Override
+    public PiPage<LogVO> getLogs(LogQuery query) {
+        LambdaQueryWrapper<SysLog> wrapper = Wrappers.lambdaQuery(SysLog.class);
+        PiPage<SysLog> page = new PiPage<>(query.getPageNum(), query.getPageSize());
+        if (query.getQueryColumn() != null && StrUtil.isNotBlank(query.getKeyWord())) {
+            wrapper.like(LogQuery.LogColumn.TITLE.getColumn().equals(query.getQueryColumn()),
+                            SysLog::getTitle, query.getKeyWord())
+                    .like(LogQuery.LogColumn.CREATE_BY.getColumn().equals(query.getQueryColumn()),
+                            SysLog::getCreateBy, query.getKeyWord())
+                    .like(LogQuery.LogColumn.METHOD_NAME.getColumn().equals(query.getQueryColumn()),
+                            SysLog::getMethodName, query.getKeyWord());
+        }
+
+        if (ArrayUtil.isNotEmpty(query.getCreateTime()) && query.getCreateTime().length > 1) {
+            wrapper.ge(SysLog::getCreateTime, query.getCreateTime()[0])
+                    .le(SysLog::getCreateTime, query.getCreateTime()[1]);
+        }
+        PiPage<SysLog> rst = super.page(page, wrapper.eq(query.getType() != null, SysLog::getType, query.getType())
+                .orderByDesc(SysLog::getCreateTime)
+                .select(SysLog::getId, SysLog::getCreateTime, SysLog::getCreateBy, SysLog::getCreateBy,
+                        SysLog::getType, SysLog::getIp, SysLog::getTitle, SysLog::getExceptionDesc,
+                        SysLog::getRequestMethod, SysLog::getRequestParam, SysLog::getRequestTime, SysLog::getMethodName));
+        return logConverter.pageSysLogToPageLogVo(rst);
+    }
+
+    @Override
     public void saveLog(LogDTO dto) {
-        SysLog sysLog = logConverter.dtoToPo(dto);
+        SysLog sysLog = logConverter.logDtoToSysLog(dto);
         super.save(sysLog);
     }
 
     @Override
-    public PiPage<LogVO> getLogs(LogQueryParam queryParam) {
-        LambdaQueryWrapper<SysLog> wrapper = Wrappers.lambdaQuery(SysLog.class);
-        PiPage<SysLog> page = new PiPage<>(queryParam.getPageNum(), queryParam.getPageSize());
-        if (queryParam.getQueryColumn() != null && StrUtil.isNotBlank(queryParam.getKeyWord())) {
-            wrapper.like(LogQueryParam.LogColumn.TITLE.getColumn().equals(queryParam.getQueryColumn()),
-                            SysLog::getTitle, queryParam.getKeyWord())
-                    .like(LogQueryParam.LogColumn.CREATE_BY.getColumn().equals(queryParam.getQueryColumn()),
-                            SysLog::getCreateBy, queryParam.getKeyWord())
-                    .like(LogQueryParam.LogColumn.METHOD_NAME.getColumn().equals(queryParam.getQueryColumn()),
-                            SysLog::getMethodName, queryParam.getKeyWord());
-        }
-
-        if (ArrayUtil.isNotEmpty(queryParam.getCreateTime()) && queryParam.getCreateTime().length > 1) {
-            wrapper.ge(SysLog::getCreateTime, queryParam.getCreateTime()[0])
-                    .le(SysLog::getCreateTime, queryParam.getCreateTime()[1]);
-        }
-        PiPage<SysLog> rst = super.page(page, wrapper.eq(queryParam.getType() != null, SysLog::getType, queryParam.getType())
-                .select(SysLog::getId, SysLog::getCreateTime, SysLog::getCreateBy, SysLog::getType, SysLog::getIp,
-                        SysLog::getTitle, SysLog::getExceptionDesc, SysLog::getRequestMethod,
-                        SysLog::getRequestParam, SysLog::getRequestTime, SysLog::getMethodName));
-        return logConverter.pagePoToPageVo(rst);
-    }
-
-    @Override
-    public void delLog(String ids) {
+    public void deleteLogs(String ids) {
         if (StrUtil.isBlank(ids)) {
             throw new BadRequestException("ids 不能为空");
         }
@@ -98,14 +99,14 @@ public class LogServiceImpl extends ServiceImpl<LogMapper, SysLog> implements Lo
 
     @Override
     @SneakyThrows
-    public void export(LogQueryParam queryParam, HttpServletResponse response) {
+    public void export(LogQuery queryParam, HttpServletResponse response) {
         PiPage<LogExportVO> page = new PiPage<>(queryParam.getPageNum(), queryParam.getPageSize());
         List<LogExportVO> exportData = logMapper.listExportLog(page, queryParam);
         FileUtil.export(response, EXPORT_LOG_FILE_NAME, FileConstants.XLSX_SUFFIX, () -> {
-            try{
+            try {
                 EasyExcel.write(response.getOutputStream(), LogExportVO.class)
                         .sheet(EXPORT_LOG_FILE_NAME).doWrite(exportData);
-            }catch (IOException e){
+            } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         });

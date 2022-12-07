@@ -16,44 +16,37 @@
 
 package me.cloud.pi.admin.api.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
  * @author ZnPi
  * @date 2022-11-18
  */
+@Schema(title="日志 DTO")
 @Data
 public class LogDTO {
-    /**
-     * 类型(0:=异常;1:=正常)
-     */
+    @Schema(description = "类型(0:=异常;1:=正常)")
     private Integer type;
-    /**
-     * IP地址
-     */
+
+    @Schema(description = "IP地址")
     private String ip;
-    /**
-     * 标题
-     */
+
+    @Schema(description = "标题")
     private String title;
-    /**
-     * 异常描述
-     */
+
+    @Schema(description = "描述")
     private String exceptionDesc;
-    /**
-     * 请求方式
-     */
+
+    @Schema(description = "请求方式")
     private String requestMethod;
-    /**
-     * 请求参数
-     */
+
+    @Schema(description = "请求参数")
     private String requestParam;
-    /**
-     * 请求时间
-     */
+
+    @Schema(description = "请求时间")
     private Long requestTime;
-    /**
-     * 方法名称
-     */
+
+    @Schema(description = "方法名称")
     private String methodName;
 }

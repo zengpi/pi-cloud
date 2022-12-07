@@ -19,6 +19,7 @@ package me.cloud.pi.common.security.config;
 import lombok.RequiredArgsConstructor;
 import me.cloud.pi.common.security.extension.PiAuthenticationEntryPoint;
 import me.cloud.pi.common.security.extension.PiBearerTokenResolver;
+import me.cloud.pi.common.security.handler.PermissionHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -74,5 +75,10 @@ public class ResourceServerConfiguration {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    }
+
+    @Bean("pms")
+    public PermissionHandler permissionHandler() {
+        return new PermissionHandler();
     }
 }

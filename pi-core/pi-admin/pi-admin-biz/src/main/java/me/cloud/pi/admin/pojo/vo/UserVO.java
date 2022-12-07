@@ -16,6 +16,7 @@
 
 package me.cloud.pi.admin.pojo.vo;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -26,47 +27,44 @@ import java.util.List;
  * @author ZnPi
  * @date 2022-08-29
  */
+@Schema(title = "用户")
 @Data
 public class UserVO implements Serializable {
     public static final long serialVersionUID = -1L;
-    /**
-     * 主键
-     */
+
+    @Schema(description = "标识")
     private Long id;
-    /**
-     * 用户名
-     */
-    private String username;
-    /**
-     * 昵称
-     */
-    private String nickname;
-    /**
-     * 性别
-     */
-    private Integer sex;
-    /**
-     * 手机
-     */
-    private String phone;
-    /**
-     * 部门 ID
-     */
-    private Integer deptId;
-    /**
-     * 部门名称
-     */
-    private String deptName;
-    /**
-     * 角色 ID 列表，多个以逗号分隔
-     */
-    private List<Long> roleIds;
-    /**
-     * 状态（0:=禁用，1:=启用）
-     */
-    private Integer enabled;
-    /**
-     * 创建时间
-     */
+
+    @Schema(description = "创建时间")
     private Date createTime;
+
+    @Schema(description = "用户名")
+    private String username;
+
+    @Schema(description = "昵称")
+    private String nickname;
+
+    @Schema(description = "性别(1:=男; 2:=女)")
+    private Integer sex;
+
+    @Schema(description = "年龄")
+    private Integer age;
+
+    @Schema(description = "生日")
+    private Date bday;
+
+    @Schema(description = "手机")
+    private String phone;
+
+    @Schema(description = "部门 ID")
+    private Integer deptId;
+
+    @Schema(description = "部门名称")
+    private String deptName;
+
+    @Schema(description = "角色 ID 列表")
+    private List<Long> roleIds;
+
+    @Schema(description = "状态（0:=禁用，1:=启用）")
+    private Integer enabled;
 }

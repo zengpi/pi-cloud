@@ -16,23 +16,22 @@
 
 package me.cloud.pi.admin.pojo.query;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
-import me.cloud.pi.common.mybatis.base.BaseQueryParam;
+import me.cloud.pi.common.mybatis.base.BaseQuery;
 
 /**
  * @author ZnPi
  * @date 2022-08-29
  */
+@Schema(title = "获取用户查询参数")
 @Getter
 @Setter
-public class UserQueryParam extends BaseQueryParam {
-    /**
-     * 用户状态
-     */
+public class UserQuery extends BaseQuery {
+    @Schema(description = "用户状态（0:=禁用;1:=启用）")
     private Integer enabled;
-    /**
-     * 部门 ID
-     */
+
+    @Schema(description = "部门 ID")
     private Long deptId;
 }

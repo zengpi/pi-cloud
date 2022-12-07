@@ -28,6 +28,13 @@ import java.util.List;
  */
 public interface MenuMapper extends BaseMapper<SysMenu> {
     /**
+     * 根据角色编码列表获取菜单
+     * @param roleCodeList 角色编码列表
+     * @return 菜单
+     */
+    List<SysMenu> listMenuByRoleCodeList(@Param("roleCodeList") List<String> roleCodeList);
+
+    /**
      * 根据角色 ID 获取权限标识
      * @param ids 角色 ID
      * @return 权限标识
@@ -35,9 +42,10 @@ public interface MenuMapper extends BaseMapper<SysMenu> {
     List<SysMenu> listPermissionByRoleIds(@Param("ids") Long[] ids);
 
     /**
-     * 根据角色编码列表获取菜单
-     * @param roleCodeList 角色编码列表
-     * @return 菜单
+     * 根据角色 ID 获取菜单 ID 列表
+     *
+     * @param roleId 角色 ID
+     * @return 菜单 ID 列表
      */
-    List<SysMenu> listMenuByRoleCodeList(@Param("roleCodeList") List<String> roleCodeList);
+    List<Long> getMenuIdsByRoleId(@Param("roleId") Long roleId);
 }

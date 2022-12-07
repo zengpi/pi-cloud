@@ -21,10 +21,13 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import me.cloud.pi.admin.api.dto.LogDTO;
-import me.cloud.pi.admin.pojo.query.LogQueryParam;
+import me.cloud.pi.admin.pojo.query.LogQuery;
+import me.cloud.pi.admin.pojo.vo.LogVO;
 import me.cloud.pi.admin.service.LogService;
+import me.cloud.pi.common.mybatis.util.PiPage;
 import me.cloud.pi.common.web.util.ResponseData;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -35,16 +38,17 @@ import javax.servlet.http.HttpServletResponse;
  */
 @RestController
 @RequestMapping("/log")
-@RequiredArgsConstructor
 @Tag(name = "日志管理")
+@RequiredArgsConstructor
 @SecurityRequirement(name = HttpHeaders.AUTHORIZATION)
 public class LogController {
     private final LogService logService;
 
     @GetMapping
     @Operation(summary = "获取日志")
-    public ResponseData<?> getLogs(LogQueryParam queryParam){
-        return ResponseData.ok(logService.getLogs(queryParam));
+    @PreAuthorize("hasAuthority('sys_log_query')")
+    public ResponseData<PiPage<LogVO>> getLogs(LogQuery query){
+        return ResponseData.ok(logService.getLogs(query));
     }
 
     @PostMapping
@@ -54,16 +58,18 @@ public class LogController {
         return ResponseData.ok();
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{ids}")
     @Operation(summary = "删除日志")
-    public ResponseData<?> delLog(String ids){
-        logService.delLog(ids);
+    @PreAuthorize("hasAuthority('sys_log_delete')")
+    public ResponseData<?> deleteLogs(@PathVariable String ids){
+        logService.deleteLogs(ids);
         return ResponseData.ok();
     }
 
     @GetMapping("/export")
     @Operation(summary = "导出日志")
-    public void export(LogQueryParam queryParam, HttpServletResponse response){
-        logService.export(queryParam, response);
+    @PreAuthorize("hasAuthority('sys_log_export')")
+    public void export(LogQuery query, HttpServletResponse response){
+        logService.export(query, response);
     }
 }

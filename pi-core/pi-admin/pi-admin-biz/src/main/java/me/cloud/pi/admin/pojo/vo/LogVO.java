@@ -16,6 +16,7 @@
 
 package me.cloud.pi.admin.pojo.vo;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -25,47 +26,41 @@ import java.util.Date;
  * @author ZnPi
  * @date 2022-11-20
  */
+@Schema(title = "日志")
 @Data
 public class LogVO implements Serializable {
     private static final long serialVersionUID = 35888237550426755L;
-    /**
-     * 主键
-     */
+
+    @Schema(description = "标识")
     private Integer id;
-    /**
-     * 创建时间
-     */
+
+    @Schema(description = "创建时间")
     private Date createTime;
-    /**
-     * 类型(0:=异常;1:=正常)
-     */
+
+    @Schema(description = "操作人")
+    private String createBy;
+
+    @Schema(description = "类型(0:=异常;1:=正常)")
     private Integer type;
-    /**
-     * IP地址
-     */
+
+    @Schema(description = "IP地址")
     private String ip;
-    /**
-     * 标题
-     */
+
+    @Schema(description = "标题")
     private String title;
-    /**
-     * 描述
-     */
+
+    @Schema(description = "描述")
     private String exceptionDesc;
-    /**
-     * 请求方式
-     */
+
+    @Schema(description = "请求方式")
     private String requestMethod;
-    /**
-     * 请求参数
-     */
+
+    @Schema(description = "请求参数")
     private String requestParam;
-    /**
-     * 请求时间
-     */
+
+    @Schema(description = "请求时间")
     private String requestTime;
-    /**
-     * 方法名称
-     */
+
+    @Schema(description = "方法名称")
     private String methodName;
 }

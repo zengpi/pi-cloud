@@ -29,7 +29,7 @@ import me.cloud.pi.admin.service.RegisteredClientService;
 import me.cloud.pi.common.mybatis.util.PiPage;
 import me.cloud.pi.common.security.constant.SecurityConstants;
 import me.cloud.pi.common.web.exception.BadRequestException;
-import me.cloud.pi.common.mybatis.base.BaseQueryParam;
+import me.cloud.pi.common.mybatis.base.BaseQuery;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.stereotype.Service;
@@ -50,11 +50,13 @@ public class RegisteredClientServiceImpl extends ServiceImpl<RegisteredClientMap
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public PiPage<RegisteredClientVO> getClients(BaseQueryParam queryParam) {
-        PiPage<SysRegisteredClient> page = new PiPage<>(queryParam.getPageNum(), queryParam.getPageSize());
+    public PiPage<RegisteredClientVO> getClients(BaseQuery query) {
+        PiPage<SysRegisteredClient> page = new PiPage<>(query.getPageNum(), query.getPageSize());
         PiPage<SysRegisteredClient> clients = super.page(page, Wrappers
                 .lambdaQuery(SysRegisteredClient.class)
-                .like(StrUtil.isNotBlank(queryParam.getKeyWord()), SysRegisteredClient::getClientId, queryParam.getKeyWord())
+                .like(StrUtil.isNotBlank(query.getKeyWord()), SysRegisteredClient::getClientId, query.getKeyWord())
+                .or()
+                .like(StrUtil.isNotBlank(query.getKeyWord()), SysRegisteredClient::getClientName, query.getKeyWord())
                 .select(SysRegisteredClient::getId, SysRegisteredClient::getClientId,
                         SysRegisteredClient::getClientSecretExpiresAt, SysRegisteredClient::getClientName,
                         SysRegisteredClient::getClientAuthenticationMethods, SysRegisteredClient::getAuthorizationGrantTypes,
@@ -62,7 +64,7 @@ public class RegisteredClientServiceImpl extends ServiceImpl<RegisteredClientMap
                         SysRegisteredClient::getRequireAuthorizationConsent, SysRegisteredClient::getAccessTokenTimeToLive,
                         SysRegisteredClient::getAccessTokenFormat, SysRegisteredClient::getRefreshTokenTimeToLive)
         );
-        return registeredClientConverter.clientPoPageToClientVoPage(clients);
+        return registeredClientConverter.pageSysClientToPageClientVo(clients);
     }
 
     @Override
@@ -77,10 +79,10 @@ public class RegisteredClientServiceImpl extends ServiceImpl<RegisteredClientMap
             if (StrUtil.isBlank(dto.getClientSecret())) {
                 dto.setClientSecret(passwordEncoder.encode(SecurityConstants.DEFAULT_PASSWORD));
             }
-        }
-
-        if (StrUtil.isNotBlank(dto.getClientSecret())) {
-            dto.setClientSecret(passwordEncoder.encode(dto.getClientSecret()));
+        } else {
+            if (StrUtil.isNotBlank(dto.getClientSecret())) {
+                dto.setClientSecret(passwordEncoder.encode(dto.getClientSecret()));
+            }
         }
 
         if (dto.getAuthorizationGrantTypes() != null &&
@@ -88,7 +90,7 @@ public class RegisteredClientServiceImpl extends ServiceImpl<RegisteredClientMap
                 && StrUtil.isBlank(dto.getRedirectUris())) {
             throw new BadRequestException("当授权类型中含有授权码模式时，重定向URI不能为空");
         }
-        super.saveOrUpdate(registeredClientConverter.clientDtoToClientPo(dto));
+        super.saveOrUpdate(registeredClientConverter.clientDtoToSysClient(dto));
     }
 
     @Override

@@ -77,9 +77,13 @@ public class SysMenu extends BaseEntity {
      */
     private String redirect;
     /**
-     * 父目录 ID（-1表示根目录）
+     * 父目录 ID（0表示根目录）
      */
     private Long parentId;
+    /**
+     * 是否拥有子节点（0：否；1：是）
+     */
+    private Integer hasChildren;
     /**
      * 是否删除（0:=否，null:=是）
      */

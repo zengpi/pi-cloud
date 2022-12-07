@@ -114,6 +114,8 @@ public enum ResponseStatus {
     ACCESS_TOKEN_GEN_FAIL("B0400", "访问令牌生成失败"),
     REFRESH_TOKEN_GEN_FAIL("B0400", "访问令牌生成失败"),
 
+    BIZ_EXCEPTION("B0500", "业务异常"),
+
     /*
     错误来源于第三方服务
      */

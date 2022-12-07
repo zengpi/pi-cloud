@@ -16,17 +16,37 @@
 
 package me.cloud.pi.admin.pojo.vo;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
  * @author ZnPi
- * @date 2022-09-04
+ * @date 2022-11-25
  */
 @Data
-public class DeptTreeVO {
-    private Long id;
+@Schema(title="部门（树形）")
+public class DeptTreeVO implements Serializable {
+    private static final long serialVersionUID = 3092569192939091029L;
+
+    @Schema(description = "标识")
+    private Integer id;
+
+    @Schema(description = "创建时间")
+    private LocalDateTime createTime;
+
+    @Schema(description = "部门名称")
     private String name;
+
+    @Schema(description = "排序")
+    private Integer sort;
+
+    @Schema(description = "父节点 ID")
+    private Long parentId;
+
+    @Schema(description = "子节点")
     private List<DeptTreeVO> children;
 }

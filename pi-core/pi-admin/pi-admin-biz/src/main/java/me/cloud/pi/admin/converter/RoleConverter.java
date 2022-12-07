@@ -32,23 +32,23 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface RoleConverter {
     /**
-     * List<PO> -> List<VO>
-     * @param roleList /
-     * @return /
+     * PiPage<SysRole> -> PiPage<RoleVO>
+     * @param rolePage PiPage<SysRole>
+     * @return PiPage<RoleVO>
      */
-    List<RoleVO> rolePoListToRoleVoList(List<SysRole> roleList);
+    PiPage<RoleVO> sysRolePageToRoleVoPage(PiPage<SysRole> rolePage);
 
     /**
-     * po page -> vo page
-     * @param roles /
-     * @return /
+     * List<SysRole> -> List<RoleVO>
+     * @param roleList List<SysRole>
+     * @return List<RoleVO>
      */
-    PiPage<RoleVO> rolePoPageToRoleVoPage(PiPage<SysRole> roles);
+    List<RoleVO> sysRoleListToRoleVoList(List<SysRole> roleList);
 
     /**
-     * dto -> po
-     * @param dto /
-     * @return /
+     * RoleDTO -> SysRole
+     * @param dto RoleDTO
+     * @return SysRole
      */
-    SysRole roleDtoToRolePo(RoleDTO dto);
+    SysRole roleDtoToSysRole(RoleDTO dto);
 }
