@@ -1,3 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-me.cloud.pi.common.security.config.ResourceServerConfiguration,\
-me.cloud.pi.common.web.util.HttpEndpointUtils
