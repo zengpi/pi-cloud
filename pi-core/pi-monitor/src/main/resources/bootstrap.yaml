@@ -1,0 +1,17 @@
+server:
+  port: 8027
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  application:
+    name: pi-monitor
+  cloud:
+    nacos:
+      server-addr: pi-nacos:8848
+      config:
+        file-extension: yaml
+        extension-configs:
+          - data-id: pi-common.yaml
+            refresh: true
+

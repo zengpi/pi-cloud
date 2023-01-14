@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>pi-core</artifactId>
-        <groupId>me.cloud.pi</groupId>
-        <version>1.0.0-SNAPSHOT</version>
+        <groupId>me.pi.cloud</groupId>
+        <version>2.0.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -28,24 +28,38 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-oauth2-authorization-server</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jdbc</artifactId>
         </dependency>
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
             <scope>runtime</scope>
         </dependency>
 
         <dependency>
-            <groupId>me.cloud.pi</groupId>
+            <groupId>me.pi.cloud</groupId>
+            <artifactId>pi-common-log</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>me.pi.cloud</groupId>
             <artifactId>pi-common-redis</artifactId>
         </dependency>
         <dependency>
-            <groupId>me.cloud.pi</groupId>
+            <groupId>me.pi.cloud</groupId>
             <artifactId>pi-common-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>me.pi.cloud</groupId>
+            <artifactId>pi-admin-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

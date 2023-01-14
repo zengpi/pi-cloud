@@ -1,0 +1,3 @@
+me.pi.cloud.common.web.config.SpringDocAutoConfiguration
+me.pi.cloud.common.web.config.ConverterAutoConfiguration
+me.pi.cloud.common.web.config.WebAutoConfiguration

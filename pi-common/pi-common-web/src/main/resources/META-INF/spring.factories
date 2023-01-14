@@ -1,4 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-me.cloud.pi.common.web.config.ConverterConfiguration,\
-me.cloud.pi.common.web.util.HttpEndpointUtils,\
-me.cloud.pi.common.web.exception.GlobalExceptionHandler

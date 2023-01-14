@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>pi-common</artifactId>
-        <groupId>me.cloud.pi</groupId>
-        <version>1.0.0-SNAPSHOT</version>
+        <groupId>me.pi.cloud</groupId>
+        <version>2.0.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -25,11 +25,22 @@
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
 
         <dependency>
-            <groupId>me.cloud.pi</groupId>
+            <groupId>me.pi.cloud</groupId>
             <artifactId>pi-common-security</artifactId>
             <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-annotations-jakarta</artifactId>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
+
 </project>

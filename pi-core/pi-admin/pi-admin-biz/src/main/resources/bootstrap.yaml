@@ -1,6 +1,6 @@
 pi:
   # 数据库名称
-  db-name: pi
+  db-name: pi-cloud
 
 server:
   port: 8017
@@ -14,5 +14,7 @@ spring:
       config:
         file-extension: yaml
         extension-configs:
+          - data-id: pi-common.yaml
+            refresh: true
           - dataId: pi-mybatis.yaml
           - dataId: pi-redis.yaml

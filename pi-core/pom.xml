@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>pi-cloud</artifactId>
-        <groupId>me.cloud.pi</groupId>
-        <version>1.0.0-SNAPSHOT</version>
+        <groupId>me.pi.cloud</groupId>
+        <version>2.0.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -15,5 +15,7 @@
         <module>pi-auth</module>
         <module>pi-admin</module>
         <module>pi-gateway</module>
+        <module>pi-monitor</module>
     </modules>
+
 </project>
