@@ -3,11 +3,11 @@
 ## 简介
 
 [pi-cloud](https://gitee.com/linjiabin100/pi-cloud) 是基于 Spring Cloud 2022 & Spring Cloud Alibaba 2022、Spring Boot 3.0、MyBatis-Plus、Spring Authorization Server 1.0.0 等最新主流技术栈构建的后台管理系统。
+
 ## 特性
 
-- 基于 Spring Cloud 2021 & Spring Cloud Alibaba 2021 提供微服务开发的一站式解决方案。
-- 基于 Spring Authorization Server 0.3.1、OAuth 2.0 Resource Server、JWT 的统一认证鉴权。
-- 整合 XXL-JOB 分布式任务调度平台，开箱即用。
+- 基于 Spring Cloud 2022 & Spring Cloud Alibaba 2022 提供微服务开发的一站式解决方案。
+- 基于 Spring Authorization Server 1.0.0、OAuth 2.0 Resource Server、JWT 的统一认证鉴权。
 - 只保留核心功能，无过度自定义封装，易于学习和功能扩展。
 
 ## 预览
@@ -36,7 +36,6 @@
 - pi-cloud
 	- pi-common					公共模块
 		- pi-common-feign		OpenFeign
-		- pi-common-job			xxl-job 执行器配置
 		- pi-common-logging		日志
 		- pi-common-mybatis		MyBatis
 		- pi-common-redis		Redis
@@ -50,7 +49,6 @@
 			- pi-admin-api		服务调用公共 API 模块
 			- pi-admin-biz		业务处理模块【8017】
 		- pi-monitor			监控模块【8027】
-		- pi-job				xxl-job 调度中心【8037】
 		- pi-gateway			网关服务【9731】
 ```
 
@@ -62,7 +60,6 @@
 	- 菜单管理
 	- 角色管理
 	- 客户端管理
-	- 任务调度
 - 系统监控
 	- 接口文档
 	- 操作日志
@@ -75,17 +72,17 @@
 
 在开始之前，您需要确保您的计算机上安装了必要的环境。
 
-pi-cloud 需要 Java 8+，同时支持 Maven 3.5 及以上版本。实际上，pi-cloud 是在 Jdk 1.8.0_161下开发的。
+pi-cloud 需要 Java 17+，同时支持 Maven 3.5 及以上版本。实际上，pi-cloud 是在 Jdk 17.0.5 下开发的。
 
 此外，要保证 pi-cloud 的正常运行，还需要在您的计算机中至少存在：Nacos、MySQL、Redis。下表是以上环境版本清单：
 
-|                                                          | 版本      |
-| -------------------------------------------------------- | --------- |
-| * [Jdk](https://www.cnblogs.com/zn-pi/p/16859751.html)   | 1.8.0_161 |
-| * [MySQL](https://www.cnblogs.com/zn-pi/p/16860040.html) | 8.0.31    |
-| * [Redis](https://www.cnblogs.com/zn-pi/p/16860235.html) | 6.2.7     |
-| * [Nacos](https://www.cnblogs.com/zn-pi/p/16860283.html) | 2.1.0     |
-| [Maven](https://www.cnblogs.com/zn-pi/p/16850827.html)   | 3.6.3     |
+|                                                          | 版本   |
+| -------------------------------------------------------- | ------ |
+| * [Jdk](https://www.cnblogs.com/zn-pi/p/16859751.html)   | 17.0.5 |
+| * [MySQL](https://www.cnblogs.com/zn-pi/p/16860040.html) | 8.0.31 |
+| * [Redis](https://www.cnblogs.com/zn-pi/p/16860235.html) | 6.2.7  |
+| * [Nacos](https://www.cnblogs.com/zn-pi/p/16860283.html) | 2.2.0  |
+| [Maven](https://www.cnblogs.com/zn-pi/p/16850827.html)   | 3.8.6  |
 
 请按照上表中的指定版本进行安装，特别是 Nacos，如果版本较低，可能会出现各种问题。
 
@@ -117,7 +114,7 @@ spring:
 如果不想修改它，您需要修改 hosts 文件。Windows 中 hosts 文件位于 `C:\Windows\System32\drivers\etc\hosts`，打开该文件，在文件末尾追加：
 
 ```tex
-192.168.126.128 pi
+127.0.0.1 pi
 192.168.126.128 pi-redis
 192.168.126.128 pi-nacos
 192.168.126.128 pi-db
@@ -154,12 +151,12 @@ spring:
 ```yaml
 pi:
   # 数据库名称
-  db-name: pi
+  db-name: pi-cloud
 ```
 
 ### 导入数据库
 
-使用你喜欢的方式连接到 MySQL 数据库中，新建一个数据库，它的名称是 `pi`，并将项目目录下的 `doc/pi-cloud_xxx.sql` 导入到新建的数据库中。
+使用你喜欢的方式连接到 MySQL 数据库中，新建一个数据库，它的名称是 `pi-cloud`，并将项目目录下的 `doc/pi-cloud_xxx.sql` 导入到新建的数据库中。
 
 ### 启动项目
 
