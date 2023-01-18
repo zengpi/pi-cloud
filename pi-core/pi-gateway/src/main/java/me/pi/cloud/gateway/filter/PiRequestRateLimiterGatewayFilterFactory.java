@@ -29,6 +29,8 @@ import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.s
  * <a href="https://gist.github.com/ptarjan/e38f45f2dfe601419ca3af937fff574d#file-1-check_request_rate_limiter-rb-L11-L34">
  *     check_request_rate_limiter
  * </a>.
+ * @author ZnPi
+ * @date 2023/01/18
  */
 @Slf4j
 @Component
