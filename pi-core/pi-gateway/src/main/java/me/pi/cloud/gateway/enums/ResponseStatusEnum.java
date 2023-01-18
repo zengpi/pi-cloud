@@ -37,7 +37,8 @@ public enum ResponseStatusEnum {
     /*
     错误来源于服务端
      */
-    SYS_ERROR("B0001", "服务器内部错误");
+    SYS_ERROR("B0001", "服务器内部错误"),
+    REQUEST_RATE_LIMIT("B0101", "请求限流"),;
 
     private String code;
     private String msg;

@@ -87,7 +87,7 @@ public enum ResponseStatusEnum {
      */
     SYS_ERROR("B0001", "服务器内部错误"),
     SYS_TIMEOUT_ERROR("B0100", "系统执行超时"),
-    SYS_LIMIT("B0101", "系统限流"),
+    REQUEST_RATE_LIMIT("B0101", "请求限流"),
     SYS_DEGRADATION("B0102", "系统功能降级"),
 
     RESOURCE_ABNORMAL("B0200", "系统资源异常"),
