@@ -56,7 +56,7 @@ public class OAuth2AuthenticationFailureHandler implements AuthenticationFailure
             String description = oAuth2AuthenticationException.getError().getDescription();
 
             switch (errorCode) {
-                case OAuth2ErrorCodes.INVALID_CLIENT:
+                case OAuth2ErrorCodes.INVALID_CLIENT -> {
                     if (StrUtil.isBlank(description)) {
                         error = ResponseData.error(ResponseStatusEnum.INVALID_GRANT, "无效的客户端");
                     } else if (description.contains(OAuth2ParameterNames.CLIENT_ID)) {
@@ -68,30 +68,22 @@ public class OAuth2AuthenticationFailureHandler implements AuthenticationFailure
                     } else if (description.contains(OAuth2ParameterNames.CLIENT_SECRET)) {
                         error = ResponseData.error(ResponseStatusEnum.CLIENT_PASSWORD_INCORRECT);
                     }
-                    break;
-                case OAuth2ErrorCodes.UNSUPPORTED_GRANT_TYPE:
-                    error = ResponseData.error(ResponseStatusEnum.UNSUPPORTED_GRANT_TYPE);
-                    break;
-                case OAuth2ErrorCodes.INVALID_REQUEST:
+                }
+                case OAuth2ErrorCodes.UNSUPPORTED_GRANT_TYPE ->
+                        error = ResponseData.error(ResponseStatusEnum.UNSUPPORTED_GRANT_TYPE);
+                case OAuth2ErrorCodes.INVALID_REQUEST -> {
                     if (StrUtil.isBlank(description)) {
                         error = ResponseData.error(ResponseStatusEnum.INVALID_GRANT, "无效的客户端");
                     } else if (description.contains(OAuth2ParameterNames.GRANT_TYPE)) {
                         error = ResponseData.error(ResponseStatusEnum.GRANT_TYPE_EMPTY);
                     }
-                    break;
-                case OAuth2ErrorCodes.INVALID_GRANT:
-                    error = ResponseData.error(ResponseStatusEnum.INVALID_GRANT);
-                    break;
-                case OAuth2ErrorCodes.INVALID_SCOPE:
-                    error = ResponseData.error(ResponseStatusEnum.INVALID_SCOPE);
-                    break;
-                case OAuth2ErrorCodes.UNAUTHORIZED_CLIENT:
-                    error = ResponseData.error(ResponseStatusEnum.UNAUTHORIZED_CLIENT);
-                    break;
-                default:
-                    error = ResponseData.error(ResponseStatusEnum.USER_LOGIN_ABNORMAL.getCode(),
-                            oAuth2AuthenticationException.getError().getErrorCode());
-                    break;
+                }
+                case OAuth2ErrorCodes.INVALID_GRANT -> error = ResponseData.error(ResponseStatusEnum.INVALID_GRANT);
+                case OAuth2ErrorCodes.INVALID_SCOPE -> error = ResponseData.error(ResponseStatusEnum.INVALID_SCOPE);
+                case OAuth2ErrorCodes.UNAUTHORIZED_CLIENT ->
+                        error = ResponseData.error(ResponseStatusEnum.UNAUTHORIZED_CLIENT);
+                default -> error = ResponseData.error(ResponseStatusEnum.USER_LOGIN_ABNORMAL.getCode(),
+                        oAuth2AuthenticationException.getError().getErrorCode());
             }
         } else {
             error = ResponseData.error(ResponseStatusEnum.USER_LOGIN_ABNORMAL, exception.getLocalizedMessage());
